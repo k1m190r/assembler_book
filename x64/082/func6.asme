@@ -1,0 +1,118 @@
+                               %line 1+1 func6.asm
+                               %line 1+1 ../inc/common.inc
+                               %line 10+1 ../inc/common.inc
+                               %line 17+1 ../inc/common.inc
+                               %line 24+1 ../inc/common.inc
+nil equ 0
+nl equ 10
+                               %line 37+1 ../inc/common.inc
+                               %line 43+1 ../inc/common.inc
+                               %line 51+1 ../inc/common.inc
+[extern printf]
+                               %line 67+1 ../inc/common.inc
+                               %line 76+1 ../inc/common.inc
+                               %line 87+1 ../inc/common.inc
+                               %line 93+1 ../inc/common.inc
+                               %line 101+1 ../inc/common.inc
+                               %line 5+1 func6.asm
+[global main]
+[section .data]
+                               %line 21+1 func6.asm
+ A db 'A', nil
+                               %line 22+0 func6.asm
+ B db 'B', nil
+ C db 'C', nil
+ D db 'D', nil
+ E db 'E', nil
+ F db 'F', nil
+ G db 'G', nil
+ H db 'H', nil
+ I db 'I', nil
+ J db 'J', nil
+                               %line 23+1 func6.asm
+ fmt db "string: %s", nl,nil
+[section .bss]
+ flist resb 11
+[section .text]
+main:
+ push rbp
+                               %line 33+0 func6.asm
+ mov rbp, rsp
+                               %line 34+1 func6.asm
+                               %line 41+1 func6.asm
+ mov rdi, flist
+                               %line 42+0 func6.asm
+ mov rsi, A
+ mov rdx, B
+ mov rcx, C
+ mov r8, D
+ mov r9, E
+                               %line 43+1 func6.asm
+ push J
+                               %line 45+0 func6.asm
+ push I
+ push H
+ push G
+ push F
+                               %line 46+1 func6.asm
+ call lfunc
+ mov rdi, fmt
+                               %line 49+0 func6.asm
+ mov rsi, flist
+ xor rax, rax
+ call printf
+                               %line 50+1 func6.asm
+ mov rsp, rbp
+                               %line 51+0 func6.asm
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+                               %line 52+1 func6.asm
+lfunc:
+ push rbp
+                               %line 55+0 func6.asm
+ mov rbp, rsp
+                               %line 56+1 func6.asm
+ xor rax, rax
+                               %line 67+1 func6.asm
+ mov al, byte[rsi]
+                               %line 68+0 func6.asm
+ mov [rdi+0], al
+ mov al, byte[rdx]
+ mov [rdi+1], al
+ mov al, byte[rcx]
+ mov [rdi+2], al
+ mov al, byte[r8]
+ mov [rdi+3], al
+ mov al, byte[r9]
+ mov [rdi+4], al
+                               %line 69+1 func6.asm
+ push rbx
+ xor rbx, rbx
+                               %line 86+1 func6.asm
+ mov rax, qword[rbp+16+0*8]
+                               %line 87+0 func6.asm
+ mov bl, byte[rax]
+ mov [rdi+5+0], bl
+ mov rax, qword[rbp+16+1*8]
+ mov bl, byte[rax]
+ mov [rdi+5+1], bl
+ mov rax, qword[rbp+16+2*8]
+ mov bl, byte[rax]
+ mov [rdi+5+2], bl
+ mov rax, qword[rbp+16+3*8]
+ mov bl, byte[rax]
+ mov [rdi+5+3], bl
+ mov rax, qword[rbp+16+4*8]
+ mov bl, byte[rax]
+ mov [rdi+5+4], bl
+                               %line 88+1 func6.asm
+ xor rbx, rbx
+ mov [rdi+10], bl
+ pop rbx
+ mov rsp, rbp
+                               %line 95+0 func6.asm
+ pop rbp
+ ret
+                               %line 96+1 func6.asm

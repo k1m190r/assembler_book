@@ -57,7 +57,7 @@ extern printf
 ; ############################
 ; Prints
 
-; print_string format 1x string
+; print non floats fmt v1
 %macro PR1 2
     mov rdi, %1 ; fmt
     mov rsi, %2 ; var1
@@ -65,7 +65,7 @@ extern printf
     call printf
 %endmacro
 
-; print_string_int format str1 num1
+; print non floats fmt v1 v2
 %macro PR2 3
     mov rdi, %1 ; fmt
     mov rsi, %2 ; var1

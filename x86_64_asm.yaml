@@ -202,12 +202,13 @@ funcs:
   align on 16bytes:
     before calling function, rsp = 0x ... 0, means aligned
     push rbp (frame pointer) in PROLO aligns rsp
+    
 
 nasm:
-  # repeat %0 number of times %rotate 1 decr %1
+  # repeat %0 number of times
   %rep %0 
       <ops> %1
-      %rotate 1
+      %rotate 1 # rotate arguments
   %endrep
 
   ; n x db
@@ -217,3 +218,13 @@ nasm:
       %1 db s, nil
   %rotate 1
   %endrep
+
+  ; increment i
+  %assign i 0 
+  %rep    64 
+    inc     word [table+2*i] 
+    %assign i i+1 
+  %endrep
+
+
+

@@ -1,0 +1,362 @@
+     1                                  ; func6
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ; ################################
+     2                              <1> ; n × {extern global push}
+     3                              <1> 
+     4                              <1> %macro NEXTERN 1-*
+     5                              <1> %rep %0 
+     6                              <1>     extern %1
+     7                              <1> %rotate 1
+     8                              <1> %endrep
+     9                              <1> %endmacro
+    10                              <1> 
+    11                              <1> %macro NGLOB 1-*
+    12                              <1> %rep %0 
+    13                              <1>     global %1
+    14                              <1> %rotate 1
+    15                              <1> %endrep
+    16                              <1> %endmacro
+    17                              <1> 
+    18                              <1> %macro NPUSH 1-*
+    19                              <1> %rep %0
+    20                              <1>     push %1
+    21                              <1> %rotate 1
+    22                              <1> %endrep
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ;###########################################
+    26                              <1> ; Constants, Essential macros
+    27                              <1> 
+    28                              <1> nil equ 0
+    29                              <1> nl equ 10
+    30                              <1> 
+    31                              <1> %define NLL nl,nil
+    32                              <1> 
+    33                              <1> %macro PROLO 0
+    34                              <1>     push rbp
+    35                              <1>     mov rbp, rsp
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> %macro EPILO 0
+    39                              <1>     mov rsp, rbp
+    40                              <1>     pop rbp
+    41                              <1>     ret
+    42                              <1> %endmacro
+    43                              <1> 
+    44                              <1> %macro MAIN_EPILO_EXIT0 0
+    45                              <1>     mov rsp, rbp
+    46                              <1>     pop rbp
+    47                              <1>     mov rax, 60 ; exit
+    48                              <1>     xor rdi, rdi ; exit code 0
+    49                              <1>     syscall
+    50                              <1> %endmacro
+    51                              <1> 
+    52                              <1> ; ######################
+    53                              <1> ; PRINTF
+    54                              <1> 
+    55                              <1> extern printf
+    56                              <1> 
+    57                              <1> ; ############################
+    58                              <1> ; Prints
+    59                              <1> 
+    60                              <1> ; print non floats fmt v1
+    61                              <1> %macro PR1 2
+    62                              <1>     mov rdi, %1 ; fmt
+    63                              <1>     mov rsi, %2 ; var1
+    64                              <1>     xor rax, rax
+    65                              <1>     call printf
+    66                              <1> %endmacro
+    67                              <1> 
+    68                              <1> ; print non floats fmt v1 v2
+    69                              <1> %macro PR2 3
+    70                              <1>     mov rdi, %1 ; fmt
+    71                              <1>     mov rsi, %2 ; var1
+    72                              <1>     mov rdx, %3 ; var2
+    73                              <1>     xor rax, rax
+    74                              <1>     call printf
+    75                              <1> %endmacro
+    76                              <1> 
+    77                              <1> 
+    78                              <1> ; #################################
+    79                              <1> ; Floats
+    80                              <1> 
+    81                              <1> ; expecting xmm0..%2 with value(s)
+    82                              <1> %macro PRFX 2
+    83                              <1>     mov rdi, %1 ; fmt
+    84                              <1>     mov rax, %2 ; %2 floats
+    85                              <1>     call printf
+    86                              <1> %endmacro
+    87                              <1> 
+    88                              <1> ; print_float format 1 x float
+    89                              <1> %macro PRF1 2
+    90                              <1>     movsd xmm0, %2
+    91                              <1>     PRFX %1, 1
+    92                              <1> %endmacro
+    93                              <1> 
+    94                              <1> ; print_float format 2 x floats
+    95                              <1> ; expecting xmm0,1 with value
+    96                              <1> %macro PRF2 3
+    97                              <1>     movsd xmm0, %2 ; float 1
+    98                              <1>     movsd xmm1, %3 ; float 2
+    99                              <1>     PRFX %1, 2
+   100                              <1> %endmacro
+   101                              <1> 
+     5                                  
+     6                                  NGLOB main
+     6                              <1> %rep %0
+     6                              <1>  global %1
+     6                              <1> %rotate 1
+     6                              <1> %endrep
+     6                              <2>  global %1
+     6                              <2> %rotate 1
+     7                                  
+     8                                  ;#####################################
+     9                                  ; SECTIONS
+    10                                  
+    11                                  section .data
+    12                                  
+    13                                      ; n x db
+    14                                      %macro NBD 1-*
+    15                                      %rep %0
+    16                                          %defstr s %1
+    17                                          %1 db s, nil
+    18                                          %rotate 1
+    19                                      %endrep
+    20                                      %endmacro
+    21                                  
+    22                                      NBD A, B, C, D, E, F, G, H, I, J
+    22                              <1>  %rep %0
+    22                              <1>  %defstr s %1
+    22                              <1>  %1 db s, nil
+    22                              <1>  %rotate 1
+    22                              <1>  %endrep
+    22                              <2>  %defstr s %1
+    22 00000000 4100                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000002 4200                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000004 4300                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000006 4400                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000008 4500                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 0000000A 4600                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 0000000C 4700                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 0000000E 4800                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000010 4900                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    22                              <2>  %defstr s %1
+    22 00000012 4A00                <2>  %1 db s, nil
+    22                              <2>  %rotate 1
+    23                                  
+    24 00000014 737472696E673A2025-         fmt db "string: %s", NLL
+    24 0000001D 730A00             
+    25                                  
+    26                                  section .bss
+    27 00000000 <res 0000000B>              flist resb 11 ; reserve 11 bytes
+    28                                  
+    29                                  section .text
+    30                                  
+    31                                  ; #############################
+    32                                  main:
+    33                                  PROLO
+    33 00000000 55                  <1>  push rbp
+    33 00000001 4889E5              <1>  mov rbp, rsp
+    34                                  
+    35                                      %macro MOV2 1-*
+    36                                      %rep %0 / 2
+    37                                          mov %1, %2
+    38                                          %rotate 2
+    39                                      %endrep
+    40                                      %endmacro
+    41                                  
+    42                                      MOV2 rdi, flist, rsi, A, rdx, B, rcx, C, r8, D, r9, E
+    42                              <1>  %rep %0 / 2
+    42                              <1>  mov %1, %2
+    42                              <1>  %rotate 2
+    42                              <1>  %endrep
+    42 00000004 48BF-               <2>  mov %1, %2
+    42 00000006 [0000000000000000]  <2>
+    42                              <2>  %rotate 2
+    42 0000000E 48BE-               <2>  mov %1, %2
+    42 00000010 [0000000000000000]  <2>
+    42                              <2>  %rotate 2
+    42 00000018 48BA-               <2>  mov %1, %2
+    42 0000001A [0200000000000000]  <2>
+    42                              <2>  %rotate 2
+    42 00000022 48B9-               <2>  mov %1, %2
+    42 00000024 [0400000000000000]  <2>
+    42                              <2>  %rotate 2
+    42 0000002C 49B8-               <2>  mov %1, %2
+    42 0000002E [0600000000000000]  <2>
+    42                              <2>  %rotate 2
+    42 00000036 49B9-               <2>  mov %1, %2
+    42 00000038 [0800000000000000]  <2>
+    42                              <2>  %rotate 2
+    43                                  
+    44                                  
+    45                                      NPUSH J, I, H, G, F ; 7 .. 11 in reserve 
+    45                              <1> %rep %0
+    45                              <1>  push %1
+    45                              <1> %rotate 1
+    45                              <1> %endrep
+    45 00000040 68[12000000]        <2>  push %1
+    45                              <2> %rotate 1
+    45 00000045 68[10000000]        <2>  push %1
+    45                              <2> %rotate 1
+    45 0000004A 68[0E000000]        <2>  push %1
+    45                              <2> %rotate 1
+    45 0000004F 68[0C000000]        <2>  push %1
+    45                              <2> %rotate 1
+    45 00000054 68[0A000000]        <2>  push %1
+    45                              <2> %rotate 1
+    46                                  
+    47 00000059 E82A000000                  call lfunc 
+    48                                  
+    49                                      PR1 fmt, flist
+    49 0000005E 48BF-               <1>  mov rdi, %1
+    49 00000060 [1400000000000000]  <1>
+    49 00000068 48BE-               <1>  mov rsi, %2
+    49 0000006A [0000000000000000]  <1>
+    49 00000072 4831C0              <1>  xor rax, rax
+    49 00000075 E8(00000000)        <1>  call printf
+    50                                  
+    51                                  MAIN_EPILO_EXIT0
+    51 0000007A 4889EC              <1>  mov rsp, rbp
+    51 0000007D 5D                  <1>  pop rbp
+    51 0000007E B83C000000          <1>  mov rax, 60
+    51 00000083 4831FF              <1>  xor rdi, rdi
+    51 00000086 0F05                <1>  syscall
+    52                                  ; main:
+    53                                  
+    54                                  lfunc:
+    55                                  PROLO
+    55 00000088 55                  <1>  push rbp
+    55 00000089 4889E5              <1>  mov rbp, rsp
+    56 0000008C 4831C0                      xor rax, rax
+    57                                  
+    58                                      %macro MOV_REG 1-*
+    59                                      %assign I 0 
+    60                                      %rep    %0
+    61                                          mov al, byte[%1]
+    62                                          mov [rdi+I], al
+    63                                          %assign I I+1
+    64                                          %rotate 1
+    65                                      %endrep
+    66                                      %endmacro
+    67                                  
+    68                                      MOV_REG rsi, rdx, rcx, r8, r9
+    68                              <1>  %assign I 0
+    68                              <1>  %rep %0
+    68                              <1>  mov al, byte[%1]
+    68                              <1>  mov [rdi+I], al
+    68                              <1>  %assign I I+1
+    68                              <1>  %rotate 1
+    68                              <1>  %endrep
+    68 0000008F 8A06                <2>  mov al, byte[%1]
+    68 00000091 8807                <2>  mov [rdi+I], al
+    68                              <2>  %assign I I+1
+    68                              <2>  %rotate 1
+    68 00000093 8A02                <2>  mov al, byte[%1]
+    68 00000095 884701              <2>  mov [rdi+I], al
+    68                              <2>  %assign I I+1
+    68                              <2>  %rotate 1
+    68 00000098 8A01                <2>  mov al, byte[%1]
+    68 0000009A 884702              <2>  mov [rdi+I], al
+    68                              <2>  %assign I I+1
+    68                              <2>  %rotate 1
+    68 0000009D 418A00              <2>  mov al, byte[%1]
+    68 000000A0 884703              <2>  mov [rdi+I], al
+    68                              <2>  %assign I I+1
+    68                              <2>  %rotate 1
+    68 000000A3 418A01              <2>  mov al, byte[%1]
+    68 000000A6 884704              <2>  mov [rdi+I], al
+    68                              <2>  %assign I I+1
+    68                              <2>  %rotate 1
+    69                                  
+    70                                  
+    71 000000A9 53                          push rbx ; collee saved
+    72                                  
+    73 000000AA 4831DB                      xor rbx, rbx
+    74                                  
+    75                                      %macro MOV_STK 1
+    76                                      %assign I 0
+    77                                      %rep %1
+    78                                          mov rax, qword[rbp+16+I*8] ; call: push rip, PROLO: push rbp = 16 
+    79                                          mov bl, byte[rax]
+    80                                          mov [rdi+5+I], bl ; 5 already moved from registers
+    81                                  
+    82                                          %assign I I+1
+    83                                          %rotate 1
+    84                                      %endrep
+    85                                      %endmacro
+    86                                  
+    87                                      MOV_STK 5
+    87                              <1>  %assign I 0
+    87                              <1>  %rep %1
+    87                              <1>  mov rax, qword[rbp+16+I*8]
+    87                              <1>  mov bl, byte[rax]
+    87                              <1>  mov [rdi+5+I], bl
+    87                              <1> 
+    87                              <1>  %assign I I+1
+    87                              <1>  %rotate 1
+    87                              <1>  %endrep
+    87 000000AD 488B4510            <2>  mov rax, qword[rbp+16+I*8]
+    87 000000B1 8A18                <2>  mov bl, byte[rax]
+    87 000000B3 885F05              <2>  mov [rdi+5+I], bl
+    87                              <2> 
+    87                              <2>  %assign I I+1
+    87                              <2>  %rotate 1
+    87 000000B6 488B4518            <2>  mov rax, qword[rbp+16+I*8]
+    87 000000BA 8A18                <2>  mov bl, byte[rax]
+    87 000000BC 885F06              <2>  mov [rdi+5+I], bl
+    87                              <2> 
+    87                              <2>  %assign I I+1
+    87                              <2>  %rotate 1
+    87 000000BF 488B4520            <2>  mov rax, qword[rbp+16+I*8]
+    87 000000C3 8A18                <2>  mov bl, byte[rax]
+    87 000000C5 885F07              <2>  mov [rdi+5+I], bl
+    87                              <2> 
+    87                              <2>  %assign I I+1
+    87                              <2>  %rotate 1
+    87 000000C8 488B4528            <2>  mov rax, qword[rbp+16+I*8]
+    87 000000CC 8A18                <2>  mov bl, byte[rax]
+    87 000000CE 885F08              <2>  mov [rdi+5+I], bl
+    87                              <2> 
+    87                              <2>  %assign I I+1
+    87                              <2>  %rotate 1
+    87 000000D1 488B4530            <2>  mov rax, qword[rbp+16+I*8]
+    87 000000D5 8A18                <2>  mov bl, byte[rax]
+    87 000000D7 885F09              <2>  mov [rdi+5+I], bl
+    87                              <2> 
+    87                              <2>  %assign I I+1
+    87                              <2>  %rotate 1
+    88                                  
+    89                                      ; zero byte
+    90 000000DA 4831DB                      xor rbx, rbx
+    91 000000DD 885F0A                      mov [rdi+10], bl
+    92                                  
+    93 000000E0 5B                          pop rbx ; callee saved
+    94                                  
+    95                                  EPILO
+    95 000000E1 4889EC              <1>  mov rsp, rbp
+    95 000000E4 5D                  <1>  pop rbp
+    95 000000E5 C3                  <1>  ret
+    96                                  ; lfunc:
+    97                                  
+    98                                  
+    99                                  
