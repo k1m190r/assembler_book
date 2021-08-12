@@ -1,0 +1,121 @@
+
+                             %line 1+1 func5.asm 
+
+
+                             %line 1+1 ../inc/common.inc 
+
+
+                             %line 10+1 ../inc/common.inc 
+
+
+                             %line 17+1 ../inc/common.inc 
+
+
+                             %line 24+1 ../inc/common.inc 
+
+nil equ 0
+nl equ 10
+
+                             %line 37+1 ../inc/common.inc 
+
+
+                             %line 43+1 ../inc/common.inc 
+
+
+                             %line 51+1 ../inc/common.inc 
+
+[extern printf]
+
+                             %line 67+1 ../inc/common.inc 
+
+
+                             %line 76+1 ../inc/common.inc 
+
+
+                             %line 87+1 ../inc/common.inc 
+
+
+                             %line 93+1 ../inc/common.inc 
+
+
+                             %line 101+1 ../inc/common.inc 
+
+
+                             %line 5+1 func5.asm 
+
+[section .data]
+
+                             %line 19+1 func5.asm 
+
+ A db 'A', nil
+
+                             %line 21+0 func5.asm 
+
+ B db 'B', nil
+ C db 'C', nil
+ D db 'D', nil
+ E db 'E', nil
+ F db 'F', nil
+ G db 'G', nil
+ H db 'H', nil
+ I db 'I', nil
+ J db 'J', nil
+
+                             %line 22+1 func5.asm 
+
+fmt1 db "string: %s%s%s%s%s%s%s%s%s%s", nl,nil
+pi dq 3.14
+fmt2 db "π=%g", nl,nil
+[section .bss]
+[section .text]
+[global main]
+main:
+ push rbp
+
+                             %line 36+0 func5.asm 
+
+ mov rbp, rsp
+
+                             %line 37+1 func5.asm 
+
+mov rdi, fmt1
+mov rsi, A
+mov rdx, B
+mov rcx, C
+mov r8, D
+mov r9, E
+ push F
+
+                             %line 45+0 func5.asm 
+
+ push G
+ push H
+ push I
+ push J
+
+                             %line 46+1 func5.asm 
+
+xor rax, rax
+call printf
+and rsp, 0xfffffffffffffff0
+ movsd xmm0, [pi]
+
+                             %line 52+0 func5.asm 
+
+ mov rdi, fmt2
+ mov rax, 1
+ call printf
+
+                             %line 53+1 func5.asm 
+
+ mov rsp, rbp
+
+                             %line 55+0 func5.asm 
+
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+
+                             %line 56+1 func5.asm 
+

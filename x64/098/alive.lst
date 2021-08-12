@@ -1,0 +1,67 @@
+     1                                  ;alive
+     2                                  
+     3                                  nil equ 0
+     4                                  nl equ 10
+     5                                  
+     6                                  %define NLL nl,nil
+     7                                  
+     8                                  %macro PROLO 0
+     9                                  push rbp
+    10                                  mov rbp, rsp
+    11                                  %endmacro
+    12                                  
+    13                                  %macro EPILO 0
+    14                                  mov rsp, rbp
+    15                                  pop rbp
+    16                                  %endmacro
+    17                                  
+    18                                  section .data
+    19 00000000 68656C6C6F20776F72-     msg  db "hello world", NLL
+    19 00000009 6C640A00           
+    20                                  msg_len equ $-msg-1 ; $ current addr - prev addr - nil
+    21 0000000D 416C69766520616E64-     msg2 db "Alive and kicking", NLL
+    21 00000016 206B69636B696E670A-
+    21 0000001F 00                 
+    22                                  msg2_len equ $-msg2-1
+    23 00000020 6501000000000000        rad dq 357
+    24 00000028 A7E8482EFF210940        pi dq 3.1416
+    25                                  
+    26                                  section .bss
+    27                                  
+    28                                  section .text
+    29                                  
+    30                                  global main
+    31                                  
+    32                                  main:
+    33                                  PROLO
+    33 00000000 55                  <1> push rbp
+    33 00000001 4889E5              <1> mov rbp, rsp
+    34                                  
+    35                                  ; write stdout msg len(msg)
+    36 00000004 B801000000              mov rax, 1 ; write
+    37 00000009 BF01000000              mov rdi, 1 ; stdout
+    38 0000000E 48BE-                   mov rsi, msg
+    38 00000010 [0000000000000000] 
+    39 00000018 BA0C000000              mov rdx, msg_len
+    40 0000001D 0F05                    syscall
+    41                                  
+    42 0000001F B801000000              mov rax, 1
+    43 00000024 BF01000000              mov rdi, 1
+    44 00000029 48BE-                   mov rsi, msg2
+    44 0000002B [0D00000000000000] 
+    45 00000033 BA12000000              mov rdx, msg2_len
+    46 00000038 0F05                    syscall
+    47                                  
+    48                                  EPILO
+    48 0000003A 4889EC              <1> mov rsp, rbp
+    48 0000003D 5D                  <1> pop rbp
+    49                                  
+    50                                  ; exit 0
+    51 0000003E B83C000000              mov rax, 60 ; exit
+    52 00000043 BF00000000              mov rdi, 0 ; exit code
+    53 00000048 0F05                    syscall
+    54                                  
+    55 0000004A 90                      nop
+    56                                  
+    57                                  ;main:
+    58                                  

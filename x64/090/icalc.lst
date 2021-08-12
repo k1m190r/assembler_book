@@ -1,0 +1,302 @@
+     1                                  ;memory
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ;###########################################
+     2                              <1> ; Constants & Macros
+     3                              <1> 
+     4                              <1> nil equ 0
+     5                              <1> nl equ 10
+     6                              <1> 
+     7                              <1> %define NLL nl,nil
+     8                              <1> 
+     9                              <1> %macro PROLO 0
+    10                              <1>     push rbp
+    11                              <1>     mov rbp, rsp
+    12                              <1> %endmacro
+    13                              <1> 
+    14                              <1> %macro EPILO 0
+    15                              <1>     mov rsp, rbp
+    16                              <1>     pop rbp
+    17                              <1> %endmacro
+    18                              <1> 
+    19                              <1> %macro EXIT0 0
+    20                              <1>     mov rax, 60 ; exit
+    21                              <1>     xor rdi, rdi ; exit code 0
+    22                              <1>     syscall
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ; ######################
+    26                              <1> ; PRINTF MACROS
+    27                              <1> 
+    28                              <1> extern printf
+    29                              <1> 
+    30                              <1> ; print_string format 1x string
+    31                              <1> %macro PRS 2
+    32                              <1>     xor rax, rax
+    33                              <1>     mov rdi, %1 ; fmt
+    34                              <1>     mov rsi, %2 ; msg
+    35                              <1>     call printf
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> ; print_string_int format str1 num1
+    39                              <1> %macro PRSI 3
+    40                              <1>     xor rax, rax
+    41                              <1>     mov rdi, %1 ; fmt
+    42                              <1>     mov rsi, %2 ; str1
+    43                              <1>     mov rdx, [%3] ; int1
+    44                              <1>     call printf
+    45                              <1> %endmacro
+    46                              <1> 
+    47                              <1> ; print_int format 1x int
+    48                              <1> %macro PRI 2
+    49                              <1>     xor rax, rax
+    50                              <1>     mov rdi, %1 ; fmt
+    51                              <1>     mov rsi, [%2] ; int
+    52                              <1>     call printf
+    53                              <1> %endmacro
+    54                              <1> 
+    55                              <1> ; print_int format 2x int
+    56                              <1> %macro PRI2 3
+    57                              <1>     xor rax, rax
+    58                              <1>     mov rdi, %1 ; fmt
+    59                              <1>     mov rsi, [%2] ; int1
+    60                              <1>     mov rdx, [%3] ; int2
+    61                              <1>     call printf
+    62                              <1> %endmacro
+    63                              <1> 
+    64                              <1> ; print_float format 1x float
+    65                              <1> %macro PRF 2
+    66                              <1>     mov rax, 1
+    67                              <1>     mov rdi, %1 ; fmt
+    68                              <1>     movq xmm0, [%2] ; float
+    69                              <1>     call printf
+    70                              <1> %endmacro
+    71                              <1> 
+     5                                  
+     6                                  ;#####################################
+     7                                  ; SECTIONS
+     8                                  
+     9                                  section .data
+    10                                  
+    11                                  ; numbers
+    12 00000000 8000000000000000        num1 dq 128
+    13 00000008 1300000000000000        num2 dq 19
+    14 00000010 F4FFFFFFFFFFFFFF        neg_num dq -12
+    15                                  
+    16                                  ; fmt
+    17 00000018 6E313D256C64206E32-     fmt db "n1=%ld n2=%ld", NLL
+    17 00000021 3D256C640A00       
+    18 00000027 2573256C640A00          fmti db "%s%ld", NLL
+    19 0000002E 6E312B6E323D00          sumi db "n1+n2=", nil
+    20 00000035 6E312D6E323D00          difi db "n1-n2=", nil
+    21 0000003C 696E63286E31293D00      inci db "inc(n1)=", nil
+    22 00000045 646563286E31293D00      deci db "dec(n1)=", nil
+    23 0000004E 73686C286E312C3229-     sali db "shl(n1,2)=n1×4=", nil
+    23 00000057 3D6E31C397343D00   
+    24 0000005F 736872286E312C3229-     sari db "shr(n1,2)=n1÷4=", nil
+    24 00000068 3D6E31C3B7343D00   
+    25 00000070 736872286E312C3229-     sariex db "shr(n1,2)=n1÷4 "
+    25 00000079 3D6E31C3B73420     
+    26 00000080 7369676E2065787465-         db "sign extension=", nil
+    26 00000089 6E73696F6E3D00     
+    27 00000090 6E312A6E323D00          multi db "n1*n2=", nil
+    28 00000097 6E312F2F6E323D00        divi db "n1//n2=", nil
+    29 0000009F 72656D286E312F2F6E-     remi db "rem(n1//n2)=", nil
+    29 000000A8 32293D00           
+    30                                  
+    31                                  section .bss
+    32 00000000 <res 00000008>          resi resq 1
+    33 00000008 <res 00000008>          modulo resq 1
+    34                                  
+    35                                  section .text
+    36                                  
+    37                                  global main
+    38                                  main:
+    39                                  PROLO
+    39 00000000 55                  <1>  push rbp
+    39 00000001 4889E5              <1>  mov rbp, rsp
+    40                                  
+    41                                  ; ##################################
+    42                                  ; START
+    43                                  
+    44                                  PRI2 fmt, num1, num2
+    44 00000004 4831C0              <1>  xor rax, rax
+    44 00000007 48BF-               <1>  mov rdi, %1
+    44 00000009 [1800000000000000]  <1>
+    44 00000011 488B3425[00000000]  <1>  mov rsi, [%2]
+    44 00000019 488B1425[08000000]  <1>  mov rdx, [%3]
+    44 00000021 E8(00000000)        <1>  call printf
+    45                                  
+    46                                  %macro BINOP 2 ; operation, string
+    47                                      mov rax, [num1]
+    48                                      %1 rax, [num2]
+    49                                      mov [resi], rax
+    50                                      PRSI fmti, %2, resi
+    51                                  %endmacro
+    52                                  
+    53                                  %macro UNOP 2 ; op str
+    54                                      mov rax, [num1]
+    55                                      %1 rax
+    56                                      mov [resi], rax
+    57                                      PRSI fmti, %2, resi
+    58                                  %endmacro
+    59                                  
+    60                                  %macro SHOP 3 ; op num str
+    61                                      mov rax, [%2]
+    62                                      %1 rax, 2
+    63                                      mov [resi], rax
+    64                                      PRSI fmti, %3, resi
+    65                                  %endmacro
+    66                                  
+    67                                  %macro IOP 2 ; op str
+    68                                      mov rax, [num1]
+    69                                      %1 qword[num2]
+    70                                      mov [resi], rax
+    71                                      mov [modulo], rdx
+    72                                      PRSI fmti, %2, resi
+    73                                      PRSI fmti, remi, modulo
+    74                                  %endmacro
+    75                                  
+    76                                  BINOP add, sumi
+    76 00000026 488B0425[00000000]  <1>  mov rax, [num1]
+    76 0000002E 48030425[08000000]  <1>  %1 rax, [num2]
+    76 00000036 48890425[00000000]  <1>  mov [resi], rax
+    76                              <1>  PRSI fmti, %2, resi
+    76 0000003E 4831C0              <2>  xor rax, rax
+    76 00000041 48BF-               <2>  mov rdi, %1
+    76 00000043 [2700000000000000]  <2>
+    76 0000004B 48BE-               <2>  mov rsi, %2
+    76 0000004D [2E00000000000000]  <2>
+    76 00000055 488B1425[00000000]  <2>  mov rdx, [%3]
+    76 0000005D E8(00000000)        <2>  call printf
+    77                                  BINOP sub, difi
+    77 00000062 488B0425[00000000]  <1>  mov rax, [num1]
+    77 0000006A 482B0425[08000000]  <1>  %1 rax, [num2]
+    77 00000072 48890425[00000000]  <1>  mov [resi], rax
+    77                              <1>  PRSI fmti, %2, resi
+    77 0000007A 4831C0              <2>  xor rax, rax
+    77 0000007D 48BF-               <2>  mov rdi, %1
+    77 0000007F [2700000000000000]  <2>
+    77 00000087 48BE-               <2>  mov rsi, %2
+    77 00000089 [3500000000000000]  <2>
+    77 00000091 488B1425[00000000]  <2>  mov rdx, [%3]
+    77 00000099 E8(00000000)        <2>  call printf
+    78                                  
+    79                                  UNOP inc, inci
+    79 0000009E 488B0425[00000000]  <1>  mov rax, [num1]
+    79 000000A6 48FFC0              <1>  %1 rax
+    79 000000A9 48890425[00000000]  <1>  mov [resi], rax
+    79                              <1>  PRSI fmti, %2, resi
+    79 000000B1 4831C0              <2>  xor rax, rax
+    79 000000B4 48BF-               <2>  mov rdi, %1
+    79 000000B6 [2700000000000000]  <2>
+    79 000000BE 48BE-               <2>  mov rsi, %2
+    79 000000C0 [3C00000000000000]  <2>
+    79 000000C8 488B1425[00000000]  <2>  mov rdx, [%3]
+    79 000000D0 E8(00000000)        <2>  call printf
+    80                                  UNOP dec, deci
+    80 000000D5 488B0425[00000000]  <1>  mov rax, [num1]
+    80 000000DD 48FFC8              <1>  %1 rax
+    80 000000E0 48890425[00000000]  <1>  mov [resi], rax
+    80                              <1>  PRSI fmti, %2, resi
+    80 000000E8 4831C0              <2>  xor rax, rax
+    80 000000EB 48BF-               <2>  mov rdi, %1
+    80 000000ED [2700000000000000]  <2>
+    80 000000F5 48BE-               <2>  mov rsi, %2
+    80 000000F7 [4500000000000000]  <2>
+    80 000000FF 488B1425[00000000]  <2>  mov rdx, [%3]
+    80 00000107 E8(00000000)        <2>  call printf
+    81                                  
+    82                                  SHOP sal, num1, sali
+    82 0000010C 488B0425[00000000]  <1>  mov rax, [%2]
+    82 00000114 48C1E002            <1>  %1 rax, 2
+    82 00000118 48890425[00000000]  <1>  mov [resi], rax
+    82                              <1>  PRSI fmti, %3, resi
+    82 00000120 4831C0              <2>  xor rax, rax
+    82 00000123 48BF-               <2>  mov rdi, %1
+    82 00000125 [2700000000000000]  <2>
+    82 0000012D 48BE-               <2>  mov rsi, %2
+    82 0000012F [4E00000000000000]  <2>
+    82 00000137 488B1425[00000000]  <2>  mov rdx, [%3]
+    82 0000013F E8(00000000)        <2>  call printf
+    83                                  SHOP sar, num1, sari
+    83 00000144 488B0425[00000000]  <1>  mov rax, [%2]
+    83 0000014C 48C1F802            <1>  %1 rax, 2
+    83 00000150 48890425[00000000]  <1>  mov [resi], rax
+    83                              <1>  PRSI fmti, %3, resi
+    83 00000158 4831C0              <2>  xor rax, rax
+    83 0000015B 48BF-               <2>  mov rdi, %1
+    83 0000015D [2700000000000000]  <2>
+    83 00000165 48BE-               <2>  mov rsi, %2
+    83 00000167 [5F00000000000000]  <2>
+    83 0000016F 488B1425[00000000]  <2>  mov rdx, [%3]
+    83 00000177 E8(00000000)        <2>  call printf
+    84                                  SHOP sar, neg_num, sariex
+    84 0000017C 488B0425[10000000]  <1>  mov rax, [%2]
+    84 00000184 48C1F802            <1>  %1 rax, 2
+    84 00000188 48890425[00000000]  <1>  mov [resi], rax
+    84                              <1>  PRSI fmti, %3, resi
+    84 00000190 4831C0              <2>  xor rax, rax
+    84 00000193 48BF-               <2>  mov rdi, %1
+    84 00000195 [2700000000000000]  <2>
+    84 0000019D 48BE-               <2>  mov rsi, %2
+    84 0000019F [7000000000000000]  <2>
+    84 000001A7 488B1425[00000000]  <2>  mov rdx, [%3]
+    84 000001AF E8(00000000)        <2>  call printf
+    85                                  
+    86                                  IOP imul, multi
+    86 000001B4 488B0425[00000000]  <1>  mov rax, [num1]
+    86 000001BC 48F72C25[08000000]  <1>  %1 qword[num2]
+    86 000001C4 48890425[00000000]  <1>  mov [resi], rax
+    86 000001CC 48891425[08000000]  <1>  mov [modulo], rdx
+    86                              <1>  PRSI fmti, %2, resi
+    86 000001D4 4831C0              <2>  xor rax, rax
+    86 000001D7 48BF-               <2>  mov rdi, %1
+    86 000001D9 [2700000000000000]  <2>
+    86 000001E1 48BE-               <2>  mov rsi, %2
+    86 000001E3 [9000000000000000]  <2>
+    86 000001EB 488B1425[00000000]  <2>  mov rdx, [%3]
+    86 000001F3 E8(00000000)        <2>  call printf
+    86                              <1>  PRSI fmti, remi, modulo
+    86 000001F8 4831C0              <2>  xor rax, rax
+    86 000001FB 48BF-               <2>  mov rdi, %1
+    86 000001FD [2700000000000000]  <2>
+    86 00000205 48BE-               <2>  mov rsi, %2
+    86 00000207 [9F00000000000000]  <2>
+    86 0000020F 488B1425[08000000]  <2>  mov rdx, [%3]
+    86 00000217 E8(00000000)        <2>  call printf
+    87                                  IOP idiv, divi
+    87 0000021C 488B0425[00000000]  <1>  mov rax, [num1]
+    87 00000224 48F73C25[08000000]  <1>  %1 qword[num2]
+    87 0000022C 48890425[00000000]  <1>  mov [resi], rax
+    87 00000234 48891425[08000000]  <1>  mov [modulo], rdx
+    87                              <1>  PRSI fmti, %2, resi
+    87 0000023C 4831C0              <2>  xor rax, rax
+    87 0000023F 48BF-               <2>  mov rdi, %1
+    87 00000241 [2700000000000000]  <2>
+    87 00000249 48BE-               <2>  mov rsi, %2
+    87 0000024B [9700000000000000]  <2>
+    87 00000253 488B1425[00000000]  <2>  mov rdx, [%3]
+    87 0000025B E8(00000000)        <2>  call printf
+    87                              <1>  PRSI fmti, remi, modulo
+    87 00000260 4831C0              <2>  xor rax, rax
+    87 00000263 48BF-               <2>  mov rdi, %1
+    87 00000265 [2700000000000000]  <2>
+    87 0000026D 48BE-               <2>  mov rsi, %2
+    87 0000026F [9F00000000000000]  <2>
+    87 00000277 488B1425[08000000]  <2>  mov rdx, [%3]
+    87 0000027F E8(00000000)        <2>  call printf
+    88                                  
+    89                                  ; END
+    90                                  ; ################################
+    91                                  
+    92                                  EPILO
+    92 00000284 4889EC              <1>  mov rsp, rbp
+    92 00000287 5D                  <1>  pop rbp
+    93                                  EXIT0
+    93 00000288 B83C000000          <1>  mov rax, 60
+    93 0000028D 4831FF              <1>  xor rdi, rdi
+    93 00000290 0F05                <1>  syscall
+    94                                  ;main:
+    95                                  

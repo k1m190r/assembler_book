@@ -1,0 +1,219 @@
+section <name> ∈ {.data .bss .text}
+
+section .data:
+  variables declared, defined, initialized
+  mem reserved at compilation time
+  <var name> <type> <value>
+  <var name>: ref to start of mem loc
+  <.data type>: db dw dd dq = 8 16 32 64 bits = byte word doubleword quadword
+
+contants:
+  <name> equ <value>
+  e.g.:
+    pi equ 3.1416
+
+section .bss:
+  bss = Block Started by Symbol
+  un-initialized (no values) blocks of mem
+  mem is reserved at execution not compilation time
+  <var name> <type> <number>
+  <.bss type>: resb resw resd resq = 8 16 32 64 bit
+  <number>: number of <type> size to reserve
+  e.g.:
+    darray resd 20
+
+section .txt:
+  code
+  starts with: global main
+  syscalls:
+    https://github.com/torvalds/linux/tree/master/arch/x86/entry/syscalls
+    http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+  func args:
+    1   2   3   4   5  6
+    rdi rsi rdx rcx r8 r9
+    rest are pushed in reverse order e.g. 10, 9, 8, 7
+  func return:
+            long double
+    1   2   
+    rax rdx st0 st1
+  xmm return:
+    xmm0-1
+  xmm args:
+    xmm0-7
+
+  mov dest, src:
+    reg ← val
+    reg ← mem
+    mem ← reg
+    illegal: mem ← mem 
+
+two's complement:
+  1. abs(x)
+  2. ~abs(x)
+  3. ~abs(x) + 1
+
+registers:
+  rax eax ax al ah = 64 32 16 low-8 high-8
+  rbx ...
+  rcx ...
+  rdx ...
+  rsi esi si sil = 64 32 16 low-8
+  rdi ...
+  rbp ... - base pointer
+  rsp ... - stack pointer
+  r8 r8d r8w r8b =  = 64 32 16 low-8
+  r9 .. r15 ...
+
+rip: instruction pointer - can be changed but...
+
+flags:
+  c p a z s - carry parity adjust zero sign 
+  carry - prev instr had a carry
+  parity - last byte has even number of 1s
+  adjust - bcd operations
+  zero - prev instr resulted in zero
+  sign - prev instr resulted in most significant bit = 1
+
+  t i d o iopl nt - trap interrupt direction overflow IOPL nested-task
+  trap - debug flag, if set each step calls "single step interrupt handler"
+  interrupt - enable/ disable interrupts (STI/ CLI)
+  direction - string ops incr or decr # e.g.: CMPS/ MOVS, CLD/ STD
+  overflow - prev instr resulted in overflow
+  IOPL - I/O privilege level
+  nested-task - 
+
+eflags:
+  r vm ac vif vip id - resume virtual aligment virt-interrupt VI-pending CPUID
+  resume - debugging
+  vitural mode - virtual 8086 mode
+  aligment check - raise exception if set
+  virtual interrupt flag - virtual copy of IF
+  virtual interrupt pending - 
+  CPUID - can this task do CPUID
+
+MOD-REG-R/M byte:
+MOD|2:
+
+REG|3:
+  0   1   2   3   4   5   6   7
+  al  cl  dl  bl  ah  ch  dh  bh # 8 bit
+  a   c   d   b   sp  bp  si  di # 16, 32, 64
+  # e.g.: mov rax, imm
+  b8  b9  ba  bb  bc  bd  be  bf
+R/M|3:
+
+
+GDB:
+  https://visualgdb.com/gdbreference/commands/
+  .gdbinit:
+    set disassembly-flavor intel
+    set disassemble-next-line on
+    show disassemble-next-line
+    disp/5i $pc
+
+  start run
+  step # step into
+  next # step over
+  disassemble /r function
+  display
+  undisplay
+
+  info registers # i r
+  i all-registers # i r a
+  i r f
+  print $eax # print value of given expression
+  
+  p/x $rip # = $pc; value at 
+  p $eflags
+  x/i $rip # 
+  x/s &msg # get a string at msg
+  x/<num><type><size> <address> # eXamine memory
+  o x u t f a c s i = octal hex unsigned-dec binary floating address char string instruction
+  b h w g = byte1 halfword2 word4 giantword8
+
+ASM:
+  https://www.agner.org/optimize/ # all sort of good stuff
+  http://ref.x86asm.net/coder64.html
+  https://sandpile.org/x86/opc_1.htm
+
+  syscall = 0x0f05
+
+
+printf:
+  extern printf
+
+  mov rax, 0 ; 0 xmm regs
+  mov rdi, fmt ; stdout
+  mov rsi, msg
+  call printf
+
+jumps:
+  je: ZF=1, s+u # signed and unsigned
+  jne: ZF=0, s+u
+
+  jg: ((SF xor OF) or ZF)=0, s
+  jge: (SF xor OF)=0, s
+  jl: (SF xor OF)=1, s
+  jle: ((SF xor OF) or ZF)=1, s
+
+  ja: (CF or ZF)=0, u
+  jae: CF=0, u
+  jb: CF=1, u
+  jbe: (CF or ZF)=1, u
+
+combining ASM files:
+  https://stackoverflow.com/a/15150631/678491
+
+loops:
+  loop lbl # loop to lbl until while decr(rcx) untill rcx=0
+  # rCx is a Counter for loops
+
+elf:
+  https://linux-audit.com/elf-binaries-on-linux-understanding-and-analysis
+  readelf --file-header <elf-exe>:
+    entry point address
+  readelf --symbols <elf-exe>
+    main
+
+mul, div: unsigned
+imul, idiv: signed
+
+imul:
+  lower res in rax, higher bits in rdx
+
+idiv:
+  in is rdx:rax - higher:lower
+  so rdx has to be set to zero if rax is sufficient
+  result in rax
+  modulo in rdx
+
+arithm shift:
+  sar, sal - sign extending
+
+floats:
+  single 32: 1 8 23 = sign exponent+127 mantissa
+  double 64:  1 11 52 = sign exp+1023 mantissa
+  mov, add, sub, mul, sub: 
+    sd - double
+    ss - single
+
+funcs:
+  enter, leave = PROLO, EPILO
+  align on 16bytes:
+    before calling function, rsp = 0x ... 0, means aligned
+    push rbp (frame pointer) in PROLO aligns rsp
+
+nasm:
+  # repeat %0 number of times %rotate 1 decr %1
+  %rep %0 
+      <ops> %1
+      %rotate 1
+  %endrep
+
+  ; n x db
+  %macro NBD 1-*
+  %rep %0
+      %defstr s %1 # all params 2nd onwards becomes one string
+      %1 db s, nil
+  %rotate 1
+  %endrep

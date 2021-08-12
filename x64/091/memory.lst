@@ -1,0 +1,122 @@
+     1                                  ;memory
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ;###########################################
+     2                              <1> ; Constants & Macros
+     3                              <1> 
+     4                              <1> nil equ 0
+     5                              <1> nl equ 10
+     6                              <1> 
+     7                              <1> %define NLL nl,nil
+     8                              <1> 
+     9                              <1> %macro PROLO 0
+    10                              <1>     push rbp
+    11                              <1>     mov rbp, rsp
+    12                              <1> %endmacro
+    13                              <1> 
+    14                              <1> %macro EPILO 0
+    15                              <1>     mov rsp, rbp
+    16                              <1>     pop rbp
+    17                              <1> %endmacro
+    18                              <1> 
+    19                              <1> %macro EXIT0 0
+    20                              <1>     mov rax, 60 ; exit
+    21                              <1>     xor rdi, rdi ; exit code 0
+    22                              <1>     syscall
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ; ######################
+    26                              <1> ; PRINTF MACROS
+    27                              <1> 
+    28                              <1> extern printf
+    29                              <1> 
+    30                              <1> ; print_string format 1x string
+    31                              <1> %macro PRS 2
+    32                              <1>     xor rax, rax
+    33                              <1>     mov rdi, %1 ; fmt
+    34                              <1>     mov rsi, %2 ; msg
+    35                              <1>     call printf
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> ; print_int format 1x int
+    39                              <1> %macro PRI 2
+    40                              <1>     xor rax, rax
+    41                              <1>     mov rdi, %1 ; fmt
+    42                              <1>     mov rsi, [%2] ; int
+    43                              <1>     call printf
+    44                              <1> %endmacro
+    45                              <1> 
+    46                              <1> ; print_float format 1x float
+    47                              <1> %macro PRF 2
+    48                              <1>     mov rax, 1
+    49                              <1>     mov rdi, %1 ; fmt
+    50                              <1>     movq xmm0, [%2] ; float
+    51                              <1>     call printf
+    52                              <1> %endmacro
+    53                              <1> 
+     5                                  
+     6                                  ;#####################################
+     7                                  ; SECTIONS
+     8                                  
+     9                                  section .data
+    10                                  
+    11                                  ; numbers
+    12 00000000 7B                      b1 db 123
+    13 00000001 3930                    w1 dw 12345
+    14 00000003 0000<rept>              warr1 times 5 dw 0 ; 5 words with 0
+    15 0000000D 39300000                d1 dd 12345
+    16 00000011 3930000000000000        q1 dq 12345
+    17 00000019 61626300                txt1 db "abc", nil
+    18 0000001D 50455254FB210940        q2 dq 3.141592654
+    19 00000025 63646500                txt2 db "cde", nil
+    20                                  
+    21                                  ; reserved memory
+    22                                  section .bss
+    23 00000000 <res 00000001>          bv1 resb 1
+    24 00000001 <res 00000004>          dv1 resd 1
+    25 00000005 <res 00000014>          wv1 resw 10
+    26 00000019 <res 00000018>          qv1 resq 3
+    27                                  
+    28                                  section .text
+    29                                  
+    30                                  global main
+    31                                  main:
+    32                                  PROLO
+    32 00000000 55                  <1>  push rbp
+    32 00000001 4889E5              <1>  mov rbp, rsp
+    33                                  
+    34                                  ; ##################################
+    35                                  ; START
+    36                                  
+    37 00000004 488D0425[00000000]      lea rax, [b1] ; load address → rax
+    38 0000000C 48B8-                   mov rax, b1 ; load address → rax
+    38 0000000E [0000000000000000] 
+    39 00000016 488B0425[00000000]      mov rax, [b1] ; load value from b1 → rax
+    40                                  
+    41 0000001E 48890425[00000000]      mov [bv1], rax ; rax → [bv1]
+    42 00000026 488D0425[00000000]      lea rax, [bv1] ; bv1 addr → rax
+    43 0000002E 488D0425[01000000]      lea rax, [w1] ; addr(w1) → rax
+    44 00000036 488B0425[01000000]      mov rax, [w1] ; value(w1) → rax
+    45 0000003E 488D0425[19000000]      lea rax, [txt1] ; address(tx1) → rax
+    46 00000046 48B8-                   mov rax, txt1 ; address(tx1) → rax
+    46 00000048 [1900000000000000] 
+    47 00000050 48B8-                   mov rax, txt1+1 ; address(tx1)+1 → rax
+    47 00000052 [1A00000000000000] 
+    48 0000005A 488D0425[1A000000]      lea rax, [txt1+1] ; address(tx1)+1 → rax
+    49 00000062 488B0425[19000000]      mov rax, [txt1] ; value(txt1) → rax
+    50 0000006A 488B0425[1A000000]      mov rax, [txt1+1] ; value(txt1+1) → rax
+    51                                  
+    52                                  
+    53                                  ; END
+    54                                  ; ################################
+    55                                  
+    56                                  EPILO
+    56 00000072 4889EC              <1>  mov rsp, rbp
+    56 00000075 5D                  <1>  pop rbp
+    57                                  EXIT0
+    57 00000076 B83C000000          <1>  mov rax, 60
+    57 0000007B 4831FF              <1>  xor rdi, rdi
+    57 0000007E 0F05                <1>  syscall
+    58                                  ;main:
+    59                                  

@@ -1,0 +1,170 @@
+     1                                  ; func
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ;###########################################
+     2                              <1> ; Constants & Macros
+     3                              <1> 
+     4                              <1> nil equ 0
+     5                              <1> nl equ 10
+     6                              <1> 
+     7                              <1> %define NLL nl,nil
+     8                              <1> 
+     9                              <1> %macro PROLO 0
+    10                              <1>     push rbp
+    11                              <1>     mov rbp, rsp
+    12                              <1> %endmacro
+    13                              <1> 
+    14                              <1> %macro EPILO 0
+    15                              <1>     mov rsp, rbp
+    16                              <1>     pop rbp
+    17                              <1> %endmacro
+    18                              <1> 
+    19                              <1> %macro EXIT0 0
+    20                              <1>     mov rax, 60 ; exit
+    21                              <1>     xor rdi, rdi ; exit code 0
+    22                              <1>     syscall
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ; ######################
+    26                              <1> ; PRINTF
+    27                              <1> 
+    28                              <1> extern printf
+    29                              <1> 
+    30                              <1> %macro PR 0
+    31                              <1>     call printf
+    32                              <1> %endmacro
+    33                              <1> 
+    34                              <1> ; ############################
+    35                              <1> ; Strings
+    36                              <1> 
+    37                              <1> ; print_string format 1x string
+    38                              <1> %macro PRS 2
+    39                              <1>     xor rax, rax
+    40                              <1>     mov rdi, %1 ; fmt
+    41                              <1>     mov rsi, %2 ; msg
+    42                              <1>     PR
+    43                              <1> %endmacro
+    44                              <1> 
+    45                              <1> ; print_string_int format str1 num1
+    46                              <1> %macro PRSI 3
+    47                              <1>     xor rax, rax
+    48                              <1>     mov rdi, %1 ; fmt
+    49                              <1>     mov rsi, %2 ; str1
+    50                              <1>     mov rdx, [%3] ; int1
+    51                              <1>     PR
+    52                              <1> %endmacro
+    53                              <1> 
+    54                              <1> ; ###########################
+    55                              <1> ; Integers
+    56                              <1> 
+    57                              <1> ; print_int format 1x int
+    58                              <1> %macro PRI 2
+    59                              <1>     xor rax, rax
+    60                              <1>     mov rdi, %1 ; fmt
+    61                              <1>     mov rsi, [%2] ; int
+    62                              <1>     PR
+    63                              <1> %endmacro
+    64                              <1> 
+    65                              <1> ; print_int format 2x int
+    66                              <1> %macro PRI2 3
+    67                              <1>     xor rax, rax
+    68                              <1>     mov rdi, %1 ; fmt
+    69                              <1>     mov rsi, [%2] ; int1
+    70                              <1>     mov rdx, [%3] ; int2
+    71                              <1>     PR
+    72                              <1> %endmacro
+    73                              <1> 
+    74                              <1> ; #################################
+    75                              <1> ; Floats
+    76                              <1> 
+    77                              <1> 
+    78                              <1> ; expecting xmm0..%2 with value(s)
+    79                              <1> %macro PRFX 2
+    80                              <1>     mov rax, %2 ; x floats
+    81                              <1>     mov rdi, %1 ; fmt
+    82                              <1>     PR
+    83                              <1> %endmacro
+    84                              <1> 
+    85                              <1> ; print_float format 1 x float
+    86                              <1> %macro PRF1 2
+    87                              <1>     movsd xmm0, [%2]
+    88                              <1>     PRFX0 %1, 1
+    89                              <1> %endmacro
+    90                              <1> 
+    91                              <1> ; print_float format 2 x floats
+    92                              <1> ; expecting xmm0,1 with value
+    93                              <1> %macro PRF2 3
+    94                              <1>     movsd xmm0, [%2] ; float 1
+    95                              <1>     movsd xmm1, [%3] ; float 2
+    96                              <1>     PRFX %1, 2
+    97                              <1> %endmacro
+    98                              <1> 
+     5                                  
+     6                                  ;#####################################
+     7                                  ; SECTIONS
+     8                                  
+     9                                  section .data
+    10                                  
+    11                                  ; numbers
+    12 00000000 0000000000002440        rad dq 10.0
+    13 00000008 1F85EB51B81E0940        pi dq 3.14
+    14 00000010 413D525E3220C39720-     fmt db "A=R^2 × π=%2$g^2 × π=%1$g", NLL
+    14 00000019 CF803D253224675E32-
+    14 00000022 20C39720CF803D2531-
+    14 0000002B 24670A00           
+    15                                  
+    16                                  section .bss
+    17                                  
+    18                                  
+    19                                  section .text
+    20                                  
+    21                                  global main
+    22                                  main:
+    23                                  PROLO
+    23 00000000 55                  <1>  push rbp
+    23 00000001 4889E5              <1>  mov rbp, rsp
+    24                                  
+    25                                  ; ##################################
+    26                                  ; START
+    27                                  
+    28 00000004 E82B000000              call area
+    29                                  
+    30 00000009 F20F100C25-             movsd xmm1, [rad]
+    30 0000000E [00000000]         
+    31                                  PRFX fmt, 2
+    31 00000012 B802000000          <1>  mov rax, %2
+    31 00000017 48BF-               <1>  mov rdi, %1
+    31 00000019 [1000000000000000]  <1>
+    31                              <1>  PR
+    31 00000021 E8(00000000)        <2>  call printf
+    32                                  
+    33                                  EPILO
+    33 00000026 4889EC              <1>  mov rsp, rbp
+    33 00000029 5D                  <1>  pop rbp
+    34                                  EXIT0
+    34 0000002A B83C000000          <1>  mov rax, 60
+    34 0000002F 4831FF              <1>  xor rdi, rdi
+    34 00000032 0F05                <1>  syscall
+    35                                  ;main:
+    36                                  
+    37                                  ; ################################
+    38                                  area:
+    39                                  PROLO
+    39 00000034 55                  <1>  push rbp
+    39 00000035 4889E5              <1>  mov rbp, rsp
+    40 00000038 F20F100425-                 movsd xmm0, [rad] ; R
+    40 0000003D [00000000]         
+    41 00000041 F20F590425-                 mulsd xmm0, [rad] ; * R
+    41 00000046 [00000000]         
+    42 0000004A F20F590425-                 mulsd xmm0, [pi] ; * π
+    42 0000004F [08000000]         
+    43                                  
+    44                                  EPILO
+    44 00000053 4889EC              <1>  mov rsp, rbp
+    44 00000056 5D                  <1>  pop rbp
+    45                                  ; leave
+    46 00000057 C3                      ret
+    47                                  
+    48                                  
+    49                                  

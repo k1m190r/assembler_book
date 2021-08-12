@@ -1,0 +1,160 @@
+     1                                  ;stack
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ;###########################################
+     2                              <1> ; Constants & Macros
+     3                              <1> 
+     4                              <1> nil equ 0
+     5                              <1> nl equ 10
+     6                              <1> 
+     7                              <1> %define NLL nl,nil
+     8                              <1> 
+     9                              <1> %macro PROLO 0
+    10                              <1>     push rbp
+    11                              <1>     mov rbp, rsp
+    12                              <1> %endmacro
+    13                              <1> 
+    14                              <1> %macro EPILO 0
+    15                              <1>     mov rsp, rbp
+    16                              <1>     pop rbp
+    17                              <1> %endmacro
+    18                              <1> 
+    19                              <1> %macro EXIT0 0
+    20                              <1>     mov rax, 60 ; exit
+    21                              <1>     xor rdi, rdi ; exit code 0
+    22                              <1>     syscall
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ; ######################
+    26                              <1> ; PRINTF MACROS
+    27                              <1> 
+    28                              <1> extern printf
+    29                              <1> 
+    30                              <1> ; print_string format 1x string
+    31                              <1> %macro PRS 2
+    32                              <1>     xor rax, rax
+    33                              <1>     mov rdi, %1 ; fmt
+    34                              <1>     mov rsi, %2 ; msg
+    35                              <1>     call printf
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> ; print_string_int format str1 num1
+    39                              <1> %macro PRSI 3
+    40                              <1>     xor rax, rax
+    41                              <1>     mov rdi, %1 ; fmt
+    42                              <1>     mov rsi, %2 ; str1
+    43                              <1>     mov rdx, [%3] ; int1
+    44                              <1>     call printf
+    45                              <1> %endmacro
+    46                              <1> 
+    47                              <1> ; print_int format 1x int
+    48                              <1> %macro PRI 2
+    49                              <1>     xor rax, rax
+    50                              <1>     mov rdi, %1 ; fmt
+    51                              <1>     mov rsi, [%2] ; int
+    52                              <1>     call printf
+    53                              <1> %endmacro
+    54                              <1> 
+    55                              <1> ; print_int format 2x int
+    56                              <1> %macro PRI2 3
+    57                              <1>     xor rax, rax
+    58                              <1>     mov rdi, %1 ; fmt
+    59                              <1>     mov rsi, [%2] ; int1
+    60                              <1>     mov rdx, [%3] ; int2
+    61                              <1>     call printf
+    62                              <1> %endmacro
+    63                              <1> 
+    64                              <1> ; print_float format 1x float
+    65                              <1> %macro PRF 2
+    66                              <1>     mov rax, 1
+    67                              <1>     mov rdi, %1 ; fmt
+    68                              <1>     movq xmm0, [%2] ; float
+    69                              <1>     call printf
+    70                              <1> %endmacro
+    71                              <1> 
+     5                                  
+     6                                  ;#####################################
+     7                                  ; SECTIONS
+     8                                  
+     9                                  section .data
+    10                                  
+    11                                  ; numbers
+    12 00000000 414243444500            str1 db "ABCDE", nil
+    13                                  str1_len equ $-str1-1
+    14 00000006 6F726967696E616C20-     fmt1 db "original str: %s", NLL
+    14 0000000F 7374723A2025730A00 
+    15 00000018 726576657273656420-     fmt2 db "reversed str: %s", NLL
+    15 00000021 7374723A2025730A00 
+    16 0000002A 00002041                num1 db 0x00, 0x00, 0x20, 0x41
+    17                                  
+    18                                  
+    19                                  section .bss
+    20                                  
+    21                                  
+    22                                  section .text
+    23                                  
+    24                                  global main
+    25                                  main:
+    26                                  PROLO
+    26 00000000 55                  <1>  push rbp
+    26 00000001 4889E5              <1>  mov rbp, rsp
+    27                                  
+    28                                  ; ##################################
+    29                                  ; START
+    30                                  
+    31                                  PRS fmt1, str1
+    31 00000004 4831C0              <1>  xor rax, rax
+    31 00000007 48BF-               <1>  mov rdi, %1
+    31 00000009 [0600000000000000]  <1>
+    31 00000011 48BE-               <1>  mov rsi, %2
+    31 00000013 [0000000000000000]  <1>
+    31 0000001B E8(00000000)        <1>  call printf
+    32                                  
+    33                                  ; push str on stack
+    34 00000020 4831C0                  xor rax, rax
+    35 00000023 48BB-                   mov rbx, str1
+    35 00000025 [0000000000000000] 
+    36 0000002D B905000000              mov rcx, str1_len
+    37 00000032 4D31E4                  xor r12, r12
+    38                                  
+    39                                  push_loop:
+    40 00000035 428A0423                    mov al, byte[rbx+r12]
+    41 00000039 50                          push rax
+    42 0000003A 49FFC4                      inc r12
+    43 0000003D E2F6                    loop push_loop
+    44                                  
+    45                                  ; pop str from stack
+    46                                  ; this reverses str
+    47                                  
+    48 0000003F 48BB-                   mov rbx, str1
+    48 00000041 [0000000000000000] 
+    49 00000049 B905000000              mov rcx, str1_len
+    50 0000004E 4D31E4                  xor r12, r12
+    51                                  
+    52                                  pop_loop:
+    53 00000051 58                          pop rax
+    54 00000052 42880423                    mov byte[rbx+r12], al
+    55 00000056 49FFC4                      inc r12
+    56 00000059 E2F6                    loop pop_loop
+    57                                  
+    58                                  PRS fmt2, str1
+    58 0000005B 4831C0              <1>  xor rax, rax
+    58 0000005E 48BF-               <1>  mov rdi, %1
+    58 00000060 [1800000000000000]  <1>
+    58 00000068 48BE-               <1>  mov rsi, %2
+    58 0000006A [0000000000000000]  <1>
+    58 00000072 E8(00000000)        <1>  call printf
+    59                                  
+    60                                  ; END
+    61                                  ; ################################
+    62                                  
+    63                                  EPILO
+    63 00000077 4889EC              <1>  mov rsp, rbp
+    63 0000007A 5D                  <1>  pop rbp
+    64                                  EXIT0
+    64 0000007B B83C000000          <1>  mov rax, 60
+    64 00000080 4831FF              <1>  xor rdi, rdi
+    64 00000083 0F05                <1>  syscall
+    65                                  ;main:
+    66                                  

@@ -1,0 +1,109 @@
+     1                                  ;betterloop
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ;###########################################
+     2                              <1> ; Constants & Macros
+     3                              <1> 
+     4                              <1> nil equ 0
+     5                              <1> nl equ 10
+     6                              <1> 
+     7                              <1> %define NLL nl,nil
+     8                              <1> 
+     9                              <1> %macro PROLO 0
+    10                              <1>     push rbp
+    11                              <1>     mov rbp, rsp
+    12                              <1> %endmacro
+    13                              <1> 
+    14                              <1> %macro EPILO 0
+    15                              <1>     mov rsp, rbp
+    16                              <1>     pop rbp
+    17                              <1> %endmacro
+    18                              <1> 
+    19                              <1> %macro EXIT0 0
+    20                              <1>     mov rax, 60 ; exit
+    21                              <1>     xor rdi, rdi ; exit code 0
+    22                              <1>     syscall
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ; ######################
+    26                              <1> ; PRINTF MACROS
+    27                              <1> 
+    28                              <1> extern printf
+    29                              <1> 
+    30                              <1> ; print_string format 1xstring
+    31                              <1> %macro PRS 2
+    32                              <1>     xor rax, rax
+    33                              <1>     mov rdi, %1 ; fmt
+    34                              <1>     mov rsi, %2 ; msg
+    35                              <1>     call printf
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> ; print_int format 1xint
+    39                              <1> %macro PRI 2
+    40                              <1>     xor rax, rax
+    41                              <1>     mov rdi, %1 ; fmt
+    42                              <1>     mov rsi, [%2] ; int
+    43                              <1>     call printf
+    44                              <1> %endmacro
+    45                              <1> 
+    46                              <1> ; print_float format 1xfloat
+    47                              <1> %macro PRF 2
+    48                              <1>     mov rax, 1
+    49                              <1>     mov rdi, %1 ; fmt
+    50                              <1>     movq xmm0, [%2] ; float
+    51                              <1>     call printf
+    52                              <1> %endmacro
+    53                              <1> 
+     5                                  
+     6                                  ;#####################################
+     7                                  ; SECTIONS
+     8                                  
+     9                                  section .data
+    10                                  
+    11                                  ; number
+    12 00000000 0600000000000000        num dq 6
+    13                                  
+    14                                  ; fmt string
+    15 00000008 73756D2066726F6D20-     fmt db "sum from 0 to %ld is %ld", NLL
+    15 00000011 3020746F20256C6420-
+    15 0000001A 697320256C640A00   
+    16                                  
+    17                                  section .bss
+    18                                  
+    19                                  ; #############################
+    20                                  ; # CODE
+    21                                  
+    22                                  section .text
+    23                                  
+    24                                  global main
+    25                                  main:
+    26                                  PROLO
+    26 00000000 55                  <1>  push rbp
+    26 00000001 4889E5              <1>  mov rbp, rsp
+    27                                  
+    28                                  ; init counter
+    29 00000004 488B0C25[00000000]      mov rcx, [num]
+    30 0000000C 4831C0                  xor rax, rax
+    31                                  
+    32                                  bloop:
+    33 0000000F 4801C8                      add rax, rcx
+    34 00000012 E2FB                    loop bloop ; loop while decr(rcx) until rcx = 0
+    35                                  
+    36 00000014 4889C2                  mov rdx, rax ; printf 2nd arg
+    37                                  PRI fmt, num
+    37 00000017 4831C0              <1>  xor rax, rax
+    37 0000001A 48BF-               <1>  mov rdi, %1
+    37 0000001C [0800000000000000]  <1>
+    37 00000024 488B3425[00000000]  <1>  mov rsi, [%2]
+    37 0000002C E8(00000000)        <1>  call printf
+    38                                  
+    39                                  EPILO
+    39 00000031 4889EC              <1>  mov rsp, rbp
+    39 00000034 5D                  <1>  pop rbp
+    40                                  EXIT0
+    40 00000035 B83C000000          <1>  mov rax, 60
+    40 0000003A 4831FF              <1>  xor rdi, rdi
+    40 0000003D 0F05                <1>  syscall
+    41                                  ;main:
+    42                                  

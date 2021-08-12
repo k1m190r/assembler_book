@@ -1,0 +1,71 @@
+     1                                  ;hello4
+     2                                  
+     3                                  extern printf
+     4                                  
+     5                                  nil equ 0
+     6                                  nl equ 10
+     7                                  
+     8                                  %define NLL nl,nil
+     9                                  
+    10                                  %macro PROLO 0
+    11                                  push rbp
+    12                                  mov rbp, rsp
+    13                                  %endmacro
+    14                                  
+    15                                  %macro EPILO 0
+    16                                  mov rsp, rbp
+    17                                  pop rbp
+    18                                  %endmacro
+    19                                  
+    20                                  
+    21                                  ; print_string with format and string
+    22                                  %macro prs 2
+    23                                  xor rax, rax
+    24                                  mov rdi, %1 ; fmt
+    25                                  mov rsi, %2 ; msg
+    26                                  call printf
+    27                                  %endmacro
+    28                                  
+    29                                  section .data
+    30 00000000 68656C6C6F20776F72-     msg  db "hello world", nil
+    30 00000009 6C6400             
+    31                                  msg_len equ $-msg-1 ; $ current addr - prev addr - nil
+    32 0000000C 537472696E673A2025-     fmt db "String: %s", NLL
+    32 00000015 730A00             
+    33                                  fmt_len equ $-fmt-1 
+    34                                  
+    35 00000018 6501000000000000        rad dq 357
+    36 00000020 A7E8482EFF210940        pi dq 3.1416
+    37                                  
+    38                                  section .bss
+    39                                  
+    40                                  section .text
+    41                                  
+    42                                  global main
+    43                                  
+    44                                  main:
+    45                                  PROLO
+    45 00000000 55                  <1> push rbp
+    45 00000001 4889E5              <1> mov rbp, rsp
+    46                                  
+    47                                  prs fmt, msg
+    47 00000004 4831C0              <1> xor rax, rax
+    47 00000007 48BF-               <1> mov rdi, %1
+    47 00000009 [0C00000000000000]  <1>
+    47 00000011 48BE-               <1> mov rsi, %2
+    47 00000013 [0000000000000000]  <1>
+    47 0000001B E8(00000000)        <1> call printf
+    48                                  
+    49                                  EPILO
+    49 00000020 4889EC              <1> mov rsp, rbp
+    49 00000023 5D                  <1> pop rbp
+    50                                  
+    51                                  ; exit 0
+    52 00000024 B83C000000              mov rax, 60 ; exit
+    53 00000029 BF00000000              mov rdi, 0 ; exit code
+    54 0000002E 0F05                    syscall
+    55                                  
+    56 00000030 90                      nop
+    57                                  
+    58                                  ;main:
+    59                                  
