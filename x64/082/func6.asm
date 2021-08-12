@@ -48,6 +48,8 @@ PROLO
 MAIN_EPILO_EXIT0
 ; main:
 
+
+; #############################################
 lfunc:
 PROLO
     xor rax, rax
@@ -62,8 +64,7 @@ PROLO
     %endrep
     %endmacro
 
-    MOV_REG rsi, rdx, rcx, r8, r9
-
+    MOV_REG rsi, rdx, rcx, r8, r9 ; 0..4
 
     push rbx ; collee saved
 
@@ -81,7 +82,7 @@ PROLO
     %endrep
     %endmacro
 
-    MOV_STK 5
+    MOV_STK 5 ; 5..9
 
     ; zero byte
     xor rbx, rbx
