@@ -1,0 +1,23 @@
+
+bits3.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   rbp
+   1:	48 89 e5             	mov    rbp,rsp
+   4:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+   b:	00 00 00 
+   e:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  15:	00 00 00 
+  18:	48 31 c0             	xor    rax,rax
+  1b:	e8 00 00 00 00       	call   20 <main+0x20>
+  20:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  27:	00 
+  28:	e8 00 00 00 00       	call   2d <main+0x2d>
+  2d:	48 89 ec             	mov    rsp,rbp
+  30:	5d                   	pop    rbp
+  31:	b8 3c 00 00 00       	mov    eax,0x3c
+  36:	48 31 ff             	xor    rdi,rdi
+  39:	0f 05                	syscall 

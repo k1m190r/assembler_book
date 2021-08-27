@@ -1,0 +1,57 @@
+                               %line 1+1 bits3.asm
+                               %line 1+1 ../inc/common.inc
+                               %line 10+1 ../inc/common.inc
+                               %line 17+1 ../inc/common.inc
+                               %line 24+1 ../inc/common.inc
+nil equ 0
+nl equ 10
+                               %line 37+1 ../inc/common.inc
+                               %line 43+1 ../inc/common.inc
+                               %line 51+1 ../inc/common.inc
+[extern printf]
+                               %line 67+1 ../inc/common.inc
+                               %line 76+1 ../inc/common.inc
+                               %line 86+1 ../inc/common.inc
+                               %line 97+1 ../inc/common.inc
+                               %line 103+1 ../inc/common.inc
+                               %line 111+1 ../inc/common.inc
+                               %line 5+1 bits3.asm
+[global main]
+[extern printb]
+[section .data]
+ fmt db "%s", nl,nil
+                               %line 25+1 bits3.asm
+                               %line 28+1 bits3.asm
+ msg1 db "No bits set:", nil
+                               %line 28+0 bits3.asm
+ msg2 db "Set #4:", nil
+ msg3 db "Set #7:", nil
+ msg4 db "Set #8:", nil
+ msg5 db "Set #61:", nil
+ msg6 db "Clear #8:", nil
+ msg7 db "Test #61 show RDI:", nil
+                               %line 29+1 bits3.asm
+ bitflags dq 0
+[section .bss]
+[section .text]
+main:
+ push rbp
+                               %line 38+0 bits3.asm
+ mov rbp, rsp
+                               %line 39+1 bits3.asm
+ mov rdi, fmt
+                               %line 40+0 bits3.asm
+ mov rsi, msg1
+ xor rax, rax
+ call printf
+                               %line 41+1 bits3.asm
+ mov rdi, [bitflags]
+ call printb
+                               %line 57+1 bits3.asm
+ mov rsp, rbp
+                               %line 60+0 bits3.asm
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+                               %line 61+1 bits3.asm

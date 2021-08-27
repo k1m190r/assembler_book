@@ -1,0 +1,513 @@
+     1                                  ; bits1
+     2                                  
+     3                                  ; nl nil nll PROLO EPILO EXIT0 PRS PRI PRF
+     4                                  %include "../inc/common.inc"
+     1                              <1> ; ################################
+     2                              <1> ; n × {extern global push}
+     3                              <1> 
+     4                              <1> %macro NEXTERN 1-*
+     5                              <1> %rep %0 
+     6                              <1>     extern %1
+     7                              <1> %rotate 1
+     8                              <1> %endrep
+     9                              <1> %endmacro
+    10                              <1> 
+    11                              <1> %macro NGLOB 1-*
+    12                              <1> %rep %0 
+    13                              <1>     global %1
+    14                              <1> %rotate 1
+    15                              <1> %endrep
+    16                              <1> %endmacro
+    17                              <1> 
+    18                              <1> %macro NPUSH 1-*
+    19                              <1> %rep %0
+    20                              <1>     push %1
+    21                              <1> %rotate 1
+    22                              <1> %endrep
+    23                              <1> %endmacro
+    24                              <1> 
+    25                              <1> ;###########################################
+    26                              <1> ; Constants, Essential macros
+    27                              <1> 
+    28                              <1> nil equ 0
+    29                              <1> nl equ 10
+    30                              <1> 
+    31                              <1> %define NLL nl,nil
+    32                              <1> 
+    33                              <1> %macro PROLO 0
+    34                              <1>     push rbp
+    35                              <1>     mov rbp, rsp
+    36                              <1> %endmacro
+    37                              <1> 
+    38                              <1> %macro EPILO 0
+    39                              <1>     mov rsp, rbp
+    40                              <1>     pop rbp
+    41                              <1>     ret
+    42                              <1> %endmacro
+    43                              <1> 
+    44                              <1> %macro MAIN_EPILO_EXIT0 0
+    45                              <1>     mov rsp, rbp
+    46                              <1>     pop rbp
+    47                              <1>     mov rax, 60 ; exit
+    48                              <1>     xor rdi, rdi ; exit code 0
+    49                              <1>     syscall
+    50                              <1> %endmacro
+    51                              <1> 
+    52                              <1> ; ######################
+    53                              <1> ; PRINTF
+    54                              <1> 
+    55                              <1> extern printf
+    56                              <1> 
+    57                              <1> ; ############################
+    58                              <1> ; Prints
+    59                              <1> 
+    60                              <1> ; print non floats fmt v1
+    61                              <1> %macro PR1 2
+    62                              <1>     mov rdi, %1 ; fmt
+    63                              <1>     mov rsi, %2 ; var1
+    64                              <1>     xor rax, rax
+    65                              <1>     call printf
+    66                              <1> %endmacro
+    67                              <1> 
+    68                              <1> ; print non floats fmt v1 v2
+    69                              <1> %macro PR2 3
+    70                              <1>     mov rdi, %1 ; fmt
+    71                              <1>     mov rsi, %2 ; var1
+    72                              <1>     mov rdx, %3 ; var2
+    73                              <1>     xor rax, rax
+    74                              <1>     call printf
+    75                              <1> %endmacro
+    76                              <1> 
+    77                              <1> 
+    78                              <1> ; #################################
+    79                              <1> ; Floats
+    80                              <1> 
+    81                              <1> ; expecting xmm0..%2 with value(s)
+    82                              <1> %macro PRFX 2
+    83                              <1>     mov rdi, %1 ; fmt
+    84                              <1>     mov rax, %2 ; %2 floats
+    85                              <1>     call printf
+    86                              <1> %endmacro
+    87                              <1> 
+    88                              <1> ; print_float format 1 x float
+    89                              <1> %macro PRF1 2
+    90                              <1>     movsd xmm0, %2
+    91                              <1>     PRFX %1, 1
+    92                              <1> %endmacro
+    93                              <1> 
+    94                              <1> ; print_float format 2 x floats
+    95                              <1> ; expecting xmm0,1 with value
+    96                              <1> %macro PRF2 3
+    97                              <1>     movsd xmm0, %2 ; float 1
+    98                              <1>     movsd xmm1, %3 ; float 2
+    99                              <1>     PRFX %1, 2
+   100                              <1> %endmacro
+   101                              <1> 
+     5                                  
+     6                                  NEXTERN printb
+     6                              <1> %rep %0
+     6                              <1>  extern %1
+     6                              <1> %rotate 1
+     6                              <1> %endrep
+     6                              <2>  extern %1
+     6                              <2> %rotate 1
+     7                                  NGLOB main
+     7                              <1> %rep %0
+     7                              <1>  global %1
+     7                              <1> %rotate 1
+     7                              <1> %endrep
+     7                              <2>  global %1
+     7                              <2> %rotate 1
+     8                                  
+     9                                  ;#####################################
+    10                                  ; SECTIONS
+    11                                  
+    12                                  section .data
+    13                                  
+    14 00000000 25730A00                    fmt1 db "%s", NLL
+    15                                  
+    16 00000004 4E3100                      msgn1 db "N1", nil
+    17 00000007 4E3200                      msgn2 db "N2", nil
+    18                                      
+    19                                      %macro  NMSG 1-*
+    20                                      %assign I 1
+    21                                      %rep %0
+    22                                          msg%[I] db %1, nil
+    23                                  
+    24                                          %assign I I+1
+    25                                          %rotate 1
+    26                                      %endrep
+    27                                      %endmacro
+    28                                  
+    33                                      NMSG     "XOR", "OR", "AND", "NOT N1",          "SHL 2 Lb of N1", "SHR 2 Lb of N1",         "SAL 2 Lb of N1", "SAR 2 Lb of N1",         "ROL 2 Lb of N1", "ROL 2 Lb of N2",         "ROR 2 Lb of N1", "ROR 2 Lb of N2"
+    33                              <1>  %assign I 1
+    33                              <1>  %rep %0
+    33                              <1>  msgI db %1, nil
+    33                              <1> 
+    33                              <1>  %assign I I+1
+    33                              <1>  %rotate 1
+    33                              <1>  %endrep
+    33 0000000A 584F5200            <2>  msgI db %1, nil
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 0000000E 4F5200              <2>  msgI db %1, nil
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000011 414E4400            <2>  msgI db %1, nil
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000015 4E4F54204E3100      <2>  msgI db %1, nil
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 0000001C 53484C2032204C6220- <2>  msgI db %1, nil
+    33 00000025 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 0000002B 5348522032204C6220- <2>  msgI db %1, nil
+    33 00000034 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 0000003A 53414C2032204C6220- <2>  msgI db %1, nil
+    33 00000043 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000049 5341522032204C6220- <2>  msgI db %1, nil
+    33 00000052 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000058 524F4C2032204C6220- <2>  msgI db %1, nil
+    33 00000061 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000067 524F4C2032204C6220- <2>  msgI db %1, nil
+    33 00000070 6F66204E3200        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000076 524F522032204C6220- <2>  msgI db %1, nil
+    33 0000007F 6F66204E3100        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    33 00000085 524F522032204C6220- <2>  msgI db %1, nil
+    33 0000008E 6F66204E3200        <2>
+    33                              <2> 
+    33                              <2>  %assign I I+1
+    33                              <2>  %rotate 1
+    34                                  
+    35 00000094 B8FFFFFFFFFFFFFF            n1 dq -72
+    36 0000009C 2804000000000000            n2 dq 1064
+    37                                  
+    38                                  section .bss
+    39                                  
+    40                                  section .text
+    41                                  
+    42                                  ; #############################
+    43                                  main:
+    44                                  PROLO
+    44 00000000 55                  <1>  push rbp
+    44 00000001 4889E5              <1>  mov rbp, rsp
+    45                                  
+    46                                      ;p n1
+    47                                      PR1 fmt1, msgn1
+    47 00000004 48BF-               <1>  mov rdi, %1
+    47 00000006 [0000000000000000]  <1>
+    47 0000000E 48BE-               <1>  mov rsi, %2
+    47 00000010 [0400000000000000]  <1>
+    47 00000018 4831C0              <1>  xor rax, rax
+    47 0000001B E8(00000000)        <1>  call printf
+    48 00000020 488B3C25[94000000]          mov rdi, [n1]
+    49 00000028 E8(00000000)                call printb
+    50                                  
+    51                                      ;p n2
+    52                                      PR1 fmt1, msgn2
+    52 0000002D 48BF-               <1>  mov rdi, %1
+    52 0000002F [0000000000000000]  <1>
+    52 00000037 48BE-               <1>  mov rsi, %2
+    52 00000039 [0700000000000000]  <1>
+    52 00000041 4831C0              <1>  xor rax, rax
+    52 00000044 E8(00000000)        <1>  call printf
+    53 00000049 488B3C25[9C000000]          mov rdi, [n2]
+    54 00000051 E8(00000000)                call printb
+    55                                  
+    56                                      %macro BINOPS 1-*
+    57                                      %assign I 1
+    58                                      %rep %0
+    59                                          PR1 fmt1, msg%[I]
+    60                                          mov rax, [n1]
+    61                                          %1 rax, [n2]
+    62                                          mov rdi, rax
+    63                                          call printb
+    64                                  
+    65                                          %assign I I+1
+    66                                          %rotate 1
+    67                                      %endrep
+    68                                      %endmacro 
+    69                                  
+    70                                      BINOPS xor, or, and
+    70                              <1>  %assign I 1
+    70                              <1>  %rep %0
+    70                              <1>  PR1 fmt1, msgI
+    70                              <1>  mov rax, [n1]
+    70                              <1>  %1 rax, [n2]
+    70                              <1>  mov rdi, rax
+    70                              <1>  call printb
+    70                              <1> 
+    70                              <1>  %assign I I+1
+    70                              <1>  %rotate 1
+    70                              <1>  %endrep
+    70                              <2>  PR1 fmt1, msgI
+    70 00000056 48BF-               <3>  mov rdi, %1
+    70 00000058 [0000000000000000]  <3>
+    70 00000060 48BE-               <3>  mov rsi, %2
+    70 00000062 [0A00000000000000]  <3>
+    70 0000006A 4831C0              <3>  xor rax, rax
+    70 0000006D E8(00000000)        <3>  call printf
+    70 00000072 488B0425[94000000]  <2>  mov rax, [n1]
+    70 0000007A 48330425[9C000000]  <2>  %1 rax, [n2]
+    70 00000082 4889C7              <2>  mov rdi, rax
+    70 00000085 E8(00000000)        <2>  call printb
+    70                              <2> 
+    70                              <2>  %assign I I+1
+    70                              <2>  %rotate 1
+    70                              <2>  PR1 fmt1, msgI
+    70 0000008A 48BF-               <3>  mov rdi, %1
+    70 0000008C [0000000000000000]  <3>
+    70 00000094 48BE-               <3>  mov rsi, %2
+    70 00000096 [0E00000000000000]  <3>
+    70 0000009E 4831C0              <3>  xor rax, rax
+    70 000000A1 E8(00000000)        <3>  call printf
+    70 000000A6 488B0425[94000000]  <2>  mov rax, [n1]
+    70 000000AE 480B0425[9C000000]  <2>  %1 rax, [n2]
+    70 000000B6 4889C7              <2>  mov rdi, rax
+    70 000000B9 E8(00000000)        <2>  call printb
+    70                              <2> 
+    70                              <2>  %assign I I+1
+    70                              <2>  %rotate 1
+    70                              <2>  PR1 fmt1, msgI
+    70 000000BE 48BF-               <3>  mov rdi, %1
+    70 000000C0 [0000000000000000]  <3>
+    70 000000C8 48BE-               <3>  mov rsi, %2
+    70 000000CA [1100000000000000]  <3>
+    70 000000D2 4831C0              <3>  xor rax, rax
+    70 000000D5 E8(00000000)        <3>  call printf
+    70 000000DA 488B0425[94000000]  <2>  mov rax, [n1]
+    70 000000E2 48230425[9C000000]  <2>  %1 rax, [n2]
+    70 000000EA 4889C7              <2>  mov rdi, rax
+    70 000000ED E8(00000000)        <2>  call printb
+    70                              <2> 
+    70                              <2>  %assign I I+1
+    70                              <2>  %rotate 1
+    71                                  
+    72                                      ; NOT
+    73                                      PR1 fmt1, msg4
+    73 000000F2 48BF-               <1>  mov rdi, %1
+    73 000000F4 [0000000000000000]  <1>
+    73 000000FC 48BE-               <1>  mov rsi, %2
+    73 000000FE [1500000000000000]  <1>
+    73 00000106 4831C0              <1>  xor rax, rax
+    73 00000109 E8(00000000)        <1>  call printf
+    74 0000010E 488B0425[94000000]          mov rax, [n1]
+    75 00000116 48F7D0                      not rax
+    76 00000119 4889C7                      mov rdi, rax
+    77 0000011C E8(00000000)                call printb
+    78                                  
+    79                                  
+    80                                      %macro SHOPS 1-*
+    81                                      %assign I 5
+    82                                      %rep %0
+    83                                          PR1 fmt1, msg%[I]
+    84                                          mov rax, [n1]
+    85                                          %1  al, 2
+    86                                          mov rdi, rax
+    87                                          call printb
+    88                                  
+    89                                          %assign I I+1
+    90                                          %rotate 1
+    91                                      %endrep
+    92                                      %endmacro 
+    93                                  
+    94                                      SHOPS shl, shr, sal, sar
+    94                              <1>  %assign I 5
+    94                              <1>  %rep %0
+    94                              <1>  PR1 fmt1, msgI
+    94                              <1>  mov rax, [n1]
+    94                              <1>  %1 al, 2
+    94                              <1>  mov rdi, rax
+    94                              <1>  call printb
+    94                              <1> 
+    94                              <1>  %assign I I+1
+    94                              <1>  %rotate 1
+    94                              <1>  %endrep
+    94                              <2>  PR1 fmt1, msgI
+    94 00000121 48BF-               <3>  mov rdi, %1
+    94 00000123 [0000000000000000]  <3>
+    94 0000012B 48BE-               <3>  mov rsi, %2
+    94 0000012D [1C00000000000000]  <3>
+    94 00000135 4831C0              <3>  xor rax, rax
+    94 00000138 E8(00000000)        <3>  call printf
+    94 0000013D 488B0425[94000000]  <2>  mov rax, [n1]
+    94 00000145 C0E002              <2>  %1 al, 2
+    94 00000148 4889C7              <2>  mov rdi, rax
+    94 0000014B E8(00000000)        <2>  call printb
+    94                              <2> 
+    94                              <2>  %assign I I+1
+    94                              <2>  %rotate 1
+    94                              <2>  PR1 fmt1, msgI
+    94 00000150 48BF-               <3>  mov rdi, %1
+    94 00000152 [0000000000000000]  <3>
+    94 0000015A 48BE-               <3>  mov rsi, %2
+    94 0000015C [2B00000000000000]  <3>
+    94 00000164 4831C0              <3>  xor rax, rax
+    94 00000167 E8(00000000)        <3>  call printf
+    94 0000016C 488B0425[94000000]  <2>  mov rax, [n1]
+    94 00000174 C0E802              <2>  %1 al, 2
+    94 00000177 4889C7              <2>  mov rdi, rax
+    94 0000017A E8(00000000)        <2>  call printb
+    94                              <2> 
+    94                              <2>  %assign I I+1
+    94                              <2>  %rotate 1
+    94                              <2>  PR1 fmt1, msgI
+    94 0000017F 48BF-               <3>  mov rdi, %1
+    94 00000181 [0000000000000000]  <3>
+    94 00000189 48BE-               <3>  mov rsi, %2
+    94 0000018B [3A00000000000000]  <3>
+    94 00000193 4831C0              <3>  xor rax, rax
+    94 00000196 E8(00000000)        <3>  call printf
+    94 0000019B 488B0425[94000000]  <2>  mov rax, [n1]
+    94 000001A3 C0E002              <2>  %1 al, 2
+    94 000001A6 4889C7              <2>  mov rdi, rax
+    94 000001A9 E8(00000000)        <2>  call printb
+    94                              <2> 
+    94                              <2>  %assign I I+1
+    94                              <2>  %rotate 1
+    94                              <2>  PR1 fmt1, msgI
+    94 000001AE 48BF-               <3>  mov rdi, %1
+    94 000001B0 [0000000000000000]  <3>
+    94 000001B8 48BE-               <3>  mov rsi, %2
+    94 000001BA [4900000000000000]  <3>
+    94 000001C2 4831C0              <3>  xor rax, rax
+    94 000001C5 E8(00000000)        <3>  call printf
+    94 000001CA 488B0425[94000000]  <2>  mov rax, [n1]
+    94 000001D2 C0F802              <2>  %1 al, 2
+    94 000001D5 4889C7              <2>  mov rdi, rax
+    94 000001D8 E8(00000000)        <2>  call printb
+    94                              <2> 
+    94                              <2>  %assign I I+1
+    94                              <2>  %rotate 1
+    95                                  
+    96                                      %macro ROOPS 1-*
+    97                                      %assign I 9
+    98                                      %rep %0
+    99                                          PR1 fmt1, msg%[I]
+   100                                          mov rax, [n1]
+   101                                          %1  al, 2
+   102                                          mov rdi, rax
+   103                                          call printb
+   104                                  
+   105                                          %assign I I+1
+   106                                          PR1 fmt1, msg%[I]
+   107                                          mov rax, [n2]
+   108                                          %1  al, 2
+   109                                          mov rdi, rax
+   110                                          call printb
+   111                                  
+   112                                          %assign I I+1
+   113                                          %rotate 1
+   114                                      %endrep
+   115                                      %endmacro
+   116                                  
+   117                                      ROOPS rol, ror
+   117                              <1>  %assign I 9
+   117                              <1>  %rep %0
+   117                              <1>  PR1 fmt1, msgI
+   117                              <1>  mov rax, [n1]
+   117                              <1>  %1 al, 2
+   117                              <1>  mov rdi, rax
+   117                              <1>  call printb
+   117                              <1> 
+   117                              <1>  %assign I I+1
+   117                              <1>  PR1 fmt1, msgI
+   117                              <1>  mov rax, [n2]
+   117                              <1>  %1 al, 2
+   117                              <1>  mov rdi, rax
+   117                              <1>  call printb
+   117                              <1> 
+   117                              <1>  %assign I I+1
+   117                              <1>  %rotate 1
+   117                              <1>  %endrep
+   117                              <2>  PR1 fmt1, msgI
+   117 000001DD 48BF-               <3>  mov rdi, %1
+   117 000001DF [0000000000000000]  <3>
+   117 000001E7 48BE-               <3>  mov rsi, %2
+   117 000001E9 [5800000000000000]  <3>
+   117 000001F1 4831C0              <3>  xor rax, rax
+   117 000001F4 E8(00000000)        <3>  call printf
+   117 000001F9 488B0425[94000000]  <2>  mov rax, [n1]
+   117 00000201 C0C002              <2>  %1 al, 2
+   117 00000204 4889C7              <2>  mov rdi, rax
+   117 00000207 E8(00000000)        <2>  call printb
+   117                              <2> 
+   117                              <2>  %assign I I+1
+   117                              <2>  PR1 fmt1, msgI
+   117 0000020C 48BF-               <3>  mov rdi, %1
+   117 0000020E [0000000000000000]  <3>
+   117 00000216 48BE-               <3>  mov rsi, %2
+   117 00000218 [6700000000000000]  <3>
+   117 00000220 4831C0              <3>  xor rax, rax
+   117 00000223 E8(00000000)        <3>  call printf
+   117 00000228 488B0425[9C000000]  <2>  mov rax, [n2]
+   117 00000230 C0C002              <2>  %1 al, 2
+   117 00000233 4889C7              <2>  mov rdi, rax
+   117 00000236 E8(00000000)        <2>  call printb
+   117                              <2> 
+   117                              <2>  %assign I I+1
+   117                              <2>  %rotate 1
+   117                              <2>  PR1 fmt1, msgI
+   117 0000023B 48BF-               <3>  mov rdi, %1
+   117 0000023D [0000000000000000]  <3>
+   117 00000245 48BE-               <3>  mov rsi, %2
+   117 00000247 [7600000000000000]  <3>
+   117 0000024F 4831C0              <3>  xor rax, rax
+   117 00000252 E8(00000000)        <3>  call printf
+   117 00000257 488B0425[94000000]  <2>  mov rax, [n1]
+   117 0000025F C0C802              <2>  %1 al, 2
+   117 00000262 4889C7              <2>  mov rdi, rax
+   117 00000265 E8(00000000)        <2>  call printb
+   117                              <2> 
+   117                              <2>  %assign I I+1
+   117                              <2>  PR1 fmt1, msgI
+   117 0000026A 48BF-               <3>  mov rdi, %1
+   117 0000026C [0000000000000000]  <3>
+   117 00000274 48BE-               <3>  mov rsi, %2
+   117 00000276 [8500000000000000]  <3>
+   117 0000027E 4831C0              <3>  xor rax, rax
+   117 00000281 E8(00000000)        <3>  call printf
+   117 00000286 488B0425[9C000000]  <2>  mov rax, [n2]
+   117 0000028E C0C802              <2>  %1 al, 2
+   117 00000291 4889C7              <2>  mov rdi, rax
+   117 00000294 E8(00000000)        <2>  call printb
+   117                              <2> 
+   117                              <2>  %assign I I+1
+   117                              <2>  %rotate 1
+   118                                  
+   119                                  MAIN_EPILO_EXIT0
+   119 00000299 4889EC              <1>  mov rsp, rbp
+   119 0000029C 5D                  <1>  pop rbp
+   119 0000029D B83C000000          <1>  mov rax, 60
+   119 000002A2 4831FF              <1>  xor rdi, rdi
+   119 000002A5 0F05                <1>  syscall
+   120                                  ; main:
+   121                                  
+   122                                  
+   123                                  
+   124                                  

@@ -1,0 +1,167 @@
+
+bits1.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   rbp
+   1:	48 89 e5             	mov    rbp,rsp
+   4:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+   b:	00 00 00 
+   e:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  15:	00 00 00 
+  18:	48 31 c0             	xor    rax,rax
+  1b:	e8 00 00 00 00       	call   20 <main+0x20>
+  20:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  27:	00 
+  28:	e8 00 00 00 00       	call   2d <main+0x2d>
+  2d:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  34:	00 00 00 
+  37:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  3e:	00 00 00 
+  41:	48 31 c0             	xor    rax,rax
+  44:	e8 00 00 00 00       	call   49 <main+0x49>
+  49:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  50:	00 
+  51:	e8 00 00 00 00       	call   56 <main+0x56>
+  56:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  5d:	00 00 00 
+  60:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  67:	00 00 00 
+  6a:	48 31 c0             	xor    rax,rax
+  6d:	e8 00 00 00 00       	call   72 <main+0x72>
+  72:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+  79:	00 
+  7a:	48 33 04 25 00 00 00 	xor    rax,QWORD PTR ds:0x0
+  81:	00 
+  82:	48 89 c7             	mov    rdi,rax
+  85:	e8 00 00 00 00       	call   8a <main+0x8a>
+  8a:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  91:	00 00 00 
+  94:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  9b:	00 00 00 
+  9e:	48 31 c0             	xor    rax,rax
+  a1:	e8 00 00 00 00       	call   a6 <main+0xa6>
+  a6:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+  ad:	00 
+  ae:	48 0b 04 25 00 00 00 	or     rax,QWORD PTR ds:0x0
+  b5:	00 
+  b6:	48 89 c7             	mov    rdi,rax
+  b9:	e8 00 00 00 00       	call   be <main+0xbe>
+  be:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  c5:	00 00 00 
+  c8:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  cf:	00 00 00 
+  d2:	48 31 c0             	xor    rax,rax
+  d5:	e8 00 00 00 00       	call   da <main+0xda>
+  da:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+  e1:	00 
+  e2:	48 23 04 25 00 00 00 	and    rax,QWORD PTR ds:0x0
+  e9:	00 
+  ea:	48 89 c7             	mov    rdi,rax
+  ed:	e8 00 00 00 00       	call   f2 <main+0xf2>
+  f2:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  f9:	00 00 00 
+  fc:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 103:	00 00 00 
+ 106:	48 31 c0             	xor    rax,rax
+ 109:	e8 00 00 00 00       	call   10e <main+0x10e>
+ 10e:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 115:	00 
+ 116:	48 f7 d0             	not    rax
+ 119:	48 89 c7             	mov    rdi,rax
+ 11c:	e8 00 00 00 00       	call   121 <main+0x121>
+ 121:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 128:	00 00 00 
+ 12b:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 132:	00 00 00 
+ 135:	48 31 c0             	xor    rax,rax
+ 138:	e8 00 00 00 00       	call   13d <main+0x13d>
+ 13d:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 144:	00 
+ 145:	c0 e0 02             	shl    al,0x2
+ 148:	48 89 c7             	mov    rdi,rax
+ 14b:	e8 00 00 00 00       	call   150 <main+0x150>
+ 150:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 157:	00 00 00 
+ 15a:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 161:	00 00 00 
+ 164:	48 31 c0             	xor    rax,rax
+ 167:	e8 00 00 00 00       	call   16c <main+0x16c>
+ 16c:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 173:	00 
+ 174:	c0 e8 02             	shr    al,0x2
+ 177:	48 89 c7             	mov    rdi,rax
+ 17a:	e8 00 00 00 00       	call   17f <main+0x17f>
+ 17f:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 186:	00 00 00 
+ 189:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 190:	00 00 00 
+ 193:	48 31 c0             	xor    rax,rax
+ 196:	e8 00 00 00 00       	call   19b <main+0x19b>
+ 19b:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 1a2:	00 
+ 1a3:	c0 e0 02             	shl    al,0x2
+ 1a6:	48 89 c7             	mov    rdi,rax
+ 1a9:	e8 00 00 00 00       	call   1ae <main+0x1ae>
+ 1ae:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 1b5:	00 00 00 
+ 1b8:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 1bf:	00 00 00 
+ 1c2:	48 31 c0             	xor    rax,rax
+ 1c5:	e8 00 00 00 00       	call   1ca <main+0x1ca>
+ 1ca:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 1d1:	00 
+ 1d2:	c0 f8 02             	sar    al,0x2
+ 1d5:	48 89 c7             	mov    rdi,rax
+ 1d8:	e8 00 00 00 00       	call   1dd <main+0x1dd>
+ 1dd:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 1e4:	00 00 00 
+ 1e7:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 1ee:	00 00 00 
+ 1f1:	48 31 c0             	xor    rax,rax
+ 1f4:	e8 00 00 00 00       	call   1f9 <main+0x1f9>
+ 1f9:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 200:	00 
+ 201:	c0 c0 02             	rol    al,0x2
+ 204:	48 89 c7             	mov    rdi,rax
+ 207:	e8 00 00 00 00       	call   20c <main+0x20c>
+ 20c:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 213:	00 00 00 
+ 216:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 21d:	00 00 00 
+ 220:	48 31 c0             	xor    rax,rax
+ 223:	e8 00 00 00 00       	call   228 <main+0x228>
+ 228:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 22f:	00 
+ 230:	c0 c0 02             	rol    al,0x2
+ 233:	48 89 c7             	mov    rdi,rax
+ 236:	e8 00 00 00 00       	call   23b <main+0x23b>
+ 23b:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 242:	00 00 00 
+ 245:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 24c:	00 00 00 
+ 24f:	48 31 c0             	xor    rax,rax
+ 252:	e8 00 00 00 00       	call   257 <main+0x257>
+ 257:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 25e:	00 
+ 25f:	c0 c8 02             	ror    al,0x2
+ 262:	48 89 c7             	mov    rdi,rax
+ 265:	e8 00 00 00 00       	call   26a <main+0x26a>
+ 26a:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 271:	00 00 00 
+ 274:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 27b:	00 00 00 
+ 27e:	48 31 c0             	xor    rax,rax
+ 281:	e8 00 00 00 00       	call   286 <main+0x286>
+ 286:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+ 28d:	00 
+ 28e:	c0 c8 02             	ror    al,0x2
+ 291:	48 89 c7             	mov    rdi,rax
+ 294:	e8 00 00 00 00       	call   299 <main+0x299>
+ 299:	48 89 ec             	mov    rsp,rbp
+ 29c:	5d                   	pop    rbp
+ 29d:	b8 3c 00 00 00       	mov    eax,0x3c
+ 2a2:	48 31 ff             	xor    rdi,rdi
+ 2a5:	0f 05                	syscall 

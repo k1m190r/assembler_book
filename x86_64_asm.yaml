@@ -28,16 +28,22 @@ section .txt:
   syscalls:
     https://github.com/torvalds/linux/tree/master/arch/x86/entry/syscalls
     http://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
+
   funcs:
     enter, leave = PROLO, EPILO
-    align on 16bytes:
+    align on 16 bytes:
       before calling function, rsp = 0x ... 0, means aligned
       push rbp (frame pointer) in PROLO aligns rsp
-    
+
   func args:
     1   2   3   4   5  6
     rdi rsi rdx rcx r8 r9
     rest are pushed in reverse order e.g. 10, 9, 8, 7
+  func save regs:
+    callee: rbx rbp rsp r12 r13 r14 r15 # non-volatile
+    caller: rax rcx rdx rsi rdi r8 r9 r10 r11 xmm0..15 # volatile
+    temp: r10 r11 xmm8..15
+
   func return:
             long double
     1   2   

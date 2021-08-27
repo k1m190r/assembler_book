@@ -74,6 +74,16 @@ extern printf
     call printf
 %endmacro
 
+; print non floats fmt v1 v2 v3
+%macro PR3 4
+    mov rdi, %1 ; fmt
+    mov rsi, %2 ; var1
+    mov rdx, %3 ; var2
+    mov rcx, %4 ; var3
+    xor rax, rax
+    call printf
+%endmacro
+
 
 ; #################################
 ; Floats

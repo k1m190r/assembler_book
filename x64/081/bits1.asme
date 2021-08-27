@@ -1,0 +1,178 @@
+                               %line 1+1 bits1.asm
+                               %line 1+1 ../inc/common.inc
+                               %line 10+1 ../inc/common.inc
+                               %line 17+1 ../inc/common.inc
+                               %line 24+1 ../inc/common.inc
+nil equ 0
+nl equ 10
+                               %line 37+1 ../inc/common.inc
+                               %line 43+1 ../inc/common.inc
+                               %line 51+1 ../inc/common.inc
+[extern printf]
+                               %line 67+1 ../inc/common.inc
+                               %line 76+1 ../inc/common.inc
+                               %line 87+1 ../inc/common.inc
+                               %line 93+1 ../inc/common.inc
+                               %line 101+1 ../inc/common.inc
+                               %line 5+1 bits1.asm
+[extern printb]
+[global main]
+[section .data]
+ fmt1 db "%s", nl,nil
+ msgn1 db "N1", nil
+ msgn2 db "N2", nil
+                               %line 28+1 bits1.asm
+                               %line 33+1 bits1.asm
+ msg1 db "XOR", nil
+                               %line 33+0 bits1.asm
+ msg2 db "OR", nil
+ msg3 db "AND", nil
+ msg4 db "NOT N1", nil
+ msg5 db "SHL 2 Lb of N1", nil
+ msg6 db "SHR 2 Lb of N1", nil
+ msg7 db "SAL 2 Lb of N1", nil
+ msg8 db "SAR 2 Lb of N1", nil
+ msg9 db "ROL 2 Lb of N1", nil
+ msg10 db "ROL 2 Lb of N2", nil
+ msg11 db "ROR 2 Lb of N1", nil
+ msg12 db "ROR 2 Lb of N2", nil
+                               %line 34+1 bits1.asm
+ n1 dq -72
+ n2 dq 1064
+[section .bss]
+[section .text]
+main:
+ push rbp
+                               %line 44+0 bits1.asm
+ mov rbp, rsp
+                               %line 45+1 bits1.asm
+ mov rdi, fmt1
+                               %line 47+0 bits1.asm
+ mov rsi, msgn1
+ xor rax, rax
+ call printf
+                               %line 48+1 bits1.asm
+ mov rdi, [n1]
+ call printb
+ mov rdi, fmt1
+                               %line 52+0 bits1.asm
+ mov rsi, msgn2
+ xor rax, rax
+ call printf
+                               %line 53+1 bits1.asm
+ mov rdi, [n2]
+ call printb
+                               %line 69+1 bits1.asm
+ mov rdi, fmt1
+                               %line 70+0 bits1.asm
+ mov rsi, msg1
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ xor rax, [n2]
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg2
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ or rax, [n2]
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg3
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ and rax, [n2]
+ mov rdi, rax
+ call printb
+                               %line 71+1 bits1.asm
+ mov rdi, fmt1
+                               %line 73+0 bits1.asm
+ mov rsi, msg4
+ xor rax, rax
+ call printf
+                               %line 74+1 bits1.asm
+ mov rax, [n1]
+ not rax
+ mov rdi, rax
+ call printb
+                               %line 93+1 bits1.asm
+ mov rdi, fmt1
+                               %line 94+0 bits1.asm
+ mov rsi, msg5
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ shl al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg6
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ shr al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg7
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ sal al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg8
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ sar al, 2
+ mov rdi, rax
+ call printb
+                               %line 95+1 bits1.asm
+                               %line 116+1 bits1.asm
+ mov rdi, fmt1
+                               %line 117+0 bits1.asm
+ mov rsi, msg9
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ rol al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg10
+ xor rax, rax
+ call printf
+ mov rax, [n2]
+ rol al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg11
+ xor rax, rax
+ call printf
+ mov rax, [n1]
+ ror al, 2
+ mov rdi, rax
+ call printb
+ mov rdi, fmt1
+ mov rsi, msg12
+ xor rax, rax
+ call printf
+ mov rax, [n2]
+ ror al, 2
+ mov rdi, rax
+ call printb
+                               %line 118+1 bits1.asm
+ mov rsp, rbp
+                               %line 119+0 bits1.asm
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+                               %line 120+1 bits1.asm
