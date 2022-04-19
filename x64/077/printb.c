@@ -1,20 +1,25 @@
 // printb.c
 
-#include <stdio.h>
 
-void printb(long long n) {
+void printb(long long n)
+{
   long long s, c;
 
-  for (c = 63; c >= 0; c--) {
+  for (c = 63; c >= 0; c--)
+  {
     s = n >> c;
 
-    if ((c + 1) % 8 == 0) {
+    if ((c + 1) % 8 == 0)
+    {
       printf(" ");
     }
 
-    if (s & 1) {
+    if (s & 1)
+    {
       printf("1");
-    } else {
+    }
+    else
+    {
       printf("0");
     }
   }

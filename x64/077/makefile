@@ -1,4 +1,4 @@
-name = bits3
+name = macro
 
 spaces = "                              "
 fix_asme = '                       \

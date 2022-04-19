@@ -232,5 +232,9 @@ nasm:
     %assign i i+1 
   %endrep
 
-
+set, reset(clear), test bits:
+  bts, btr
+  bt - test bit in rax -> set CF if set
+  setc - set reg to 1 if CF set
+  setCC - where CC is C, Z, S
 

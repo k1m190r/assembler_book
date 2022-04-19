@@ -1,0 +1,62 @@
+                               %line 1+1 macro.asm
+                               %line 1+1 ../inc/common.inc
+                               %line 10+1 ../inc/common.inc
+                               %line 17+1 ../inc/common.inc
+                               %line 24+1 ../inc/common.inc
+nil equ 0
+nl equ 10
+                               %line 37+1 ../inc/common.inc
+                               %line 43+1 ../inc/common.inc
+                               %line 51+1 ../inc/common.inc
+[extern printf]
+                               %line 67+1 ../inc/common.inc
+                               %line 76+1 ../inc/common.inc
+                               %line 86+1 ../inc/common.inc
+                               %line 97+1 ../inc/common.inc
+                               %line 103+1 ../inc/common.inc
+                               %line 111+1 ../inc/common.inc
+                               %line 5+1 macro.asm
+[global main]
+[extern printb]
+                               %line 23+1 macro.asm
+[section .data]
+ num dq 15
+[section .bss]
+[section .text]
+main:
+ push rbp
+                               %line 36+0 macro.asm
+ mov rbp, rsp
+                               %line 37+1 macro.asm
+[section .data]
+                               %line 38+0 macro.asm
+ ..@9.arg1 db "Num:", 0
+ ..@9.fmt db "%s %ld", nl,nil
+[section .text]
+ mov rdi, ..@9.fmt
+ mov rsi, ..@9.arg1
+ mov rdx, [num]
+ xor rax, rax
+ call printf
+                               %line 39+1 macro.asm
+ mov rax, [num]
+ sal rax, 1
+ mov [num], rax
+[section .data]
+                               %line 42+0 macro.asm
+ ..@12.arg1 db "Num*2:", 0
+ ..@12.fmt db "%s %ld", nl,nil
+[section .text]
+ mov rdi, ..@12.fmt
+ mov rsi, ..@12.arg1
+ mov rdx, [num]
+ xor rax, rax
+ call printf
+                               %line 43+1 macro.asm
+ mov rsp, rbp
+                               %line 44+0 macro.asm
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+                               %line 45+1 macro.asm

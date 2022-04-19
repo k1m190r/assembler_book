@@ -199,40 +199,140 @@
     38 00000000 55                  <1>  push rbp
     38 00000001 4889E5              <1>  mov rbp, rsp
     39                                  
-    40                                      PR1 fmt, msg1
-    40 00000004 48BF-               <1>  mov rdi, %1
-    40 00000006 [0000000000000000]  <1>
-    40 0000000E 48BE-               <1>  mov rsi, %2
-    40 00000010 [0400000000000000]  <1>
-    40 00000018 4831C0              <1>  xor rax, rax
-    40 0000001B E8(00000000)        <1>  call printf
-    41                                  
-    42 00000020 488B3C25[4F000000]          mov rdi, [bitflags]
-    43 00000028 E8(00000000)                call printb
-    44                                  
-    45                                      %macro SHOPS 1-*
-    46                                      %assign I 1
-    47                                      %rep %0/2
-    48                                          mov rax, [%2]
-    49                                          %1  rax, 2
-    50                                          mov [res], rax
-    51                                          PR3 fmt, [%2], msg%[I], [res]
+    40                                      %macro BTS_BTR 1-*
+    41                                      %assign I 1
+    42                                      %rep %0/2
+    43                                          PR1 fmt, msg%[I]
+    44                                          bt%[%1]  qword[bitflags], %2
+    45                                          mov rdi, [bitflags]
+    46                                          call printb
+    47                                  
+    48                                          %assign I I+1
+    49                                          %rotate 2
+    50                                      %endrep
+    51                                      %endmacro 
     52                                  
-    53                                          %assign I I+1
-    54                                          %rotate 2
-    55                                      %endrep
-    56                                      %endmacro 
-    57                                  
-    58                                  
-    59                                  
-    60                                  MAIN_EPILO_EXIT0
-    60 0000002D 4889EC              <1>  mov rsp, rbp
-    60 00000030 5D                  <1>  pop rbp
-    60 00000031 B83C000000          <1>  mov rax, 60
-    60 00000036 4831FF              <1>  xor rdi, rdi
-    60 00000039 0F05                <1>  syscall
-    61                                  ; main:
-    62                                  
-    63                                  
+    53                                      BTS_BTR r, 0, s, 4, s, 7, s, 8, s, 61, r, 8
+    53                              <1>  %assign I 1
+    53                              <1>  %rep %0/2
+    53                              <1>  PR1 fmt, msgI
+    53                              <1>  bt%1 qword[bitflags], %2
+    53                              <1>  mov rdi, [bitflags]
+    53                              <1>  call printb
+    53                              <1> 
+    53                              <1>  %assign I I+1
+    53                              <1>  %rotate 2
+    53                              <1>  %endrep
+    53                              <2>  PR1 fmt, msgI
+    53 00000004 48BF-               <3>  mov rdi, %1
+    53 00000006 [0000000000000000]  <3>
+    53 0000000E 48BE-               <3>  mov rsi, %2
+    53 00000010 [0400000000000000]  <3>
+    53 00000018 4831C0              <3>  xor rax, rax
+    53 0000001B E8(00000000)        <3>  call printf
+    53 00000020 480FBA3425-         <2>  bt%1 qword[bitflags], %2
+    53 00000025 [4F000000]00        <2>
+    53 0000002A 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 00000032 E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    53                              <2>  PR1 fmt, msgI
+    53 00000037 48BF-               <3>  mov rdi, %1
+    53 00000039 [0000000000000000]  <3>
+    53 00000041 48BE-               <3>  mov rsi, %2
+    53 00000043 [1100000000000000]  <3>
+    53 0000004B 4831C0              <3>  xor rax, rax
+    53 0000004E E8(00000000)        <3>  call printf
+    53 00000053 480FBA2C25-         <2>  bt%1 qword[bitflags], %2
+    53 00000058 [4F000000]04        <2>
+    53 0000005D 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 00000065 E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    53                              <2>  PR1 fmt, msgI
+    53 0000006A 48BF-               <3>  mov rdi, %1
+    53 0000006C [0000000000000000]  <3>
+    53 00000074 48BE-               <3>  mov rsi, %2
+    53 00000076 [1900000000000000]  <3>
+    53 0000007E 4831C0              <3>  xor rax, rax
+    53 00000081 E8(00000000)        <3>  call printf
+    53 00000086 480FBA2C25-         <2>  bt%1 qword[bitflags], %2
+    53 0000008B [4F000000]07        <2>
+    53 00000090 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 00000098 E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    53                              <2>  PR1 fmt, msgI
+    53 0000009D 48BF-               <3>  mov rdi, %1
+    53 0000009F [0000000000000000]  <3>
+    53 000000A7 48BE-               <3>  mov rsi, %2
+    53 000000A9 [2100000000000000]  <3>
+    53 000000B1 4831C0              <3>  xor rax, rax
+    53 000000B4 E8(00000000)        <3>  call printf
+    53 000000B9 480FBA2C25-         <2>  bt%1 qword[bitflags], %2
+    53 000000BE [4F000000]08        <2>
+    53 000000C3 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 000000CB E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    53                              <2>  PR1 fmt, msgI
+    53 000000D0 48BF-               <3>  mov rdi, %1
+    53 000000D2 [0000000000000000]  <3>
+    53 000000DA 48BE-               <3>  mov rsi, %2
+    53 000000DC [2900000000000000]  <3>
+    53 000000E4 4831C0              <3>  xor rax, rax
+    53 000000E7 E8(00000000)        <3>  call printf
+    53 000000EC 480FBA2C25-         <2>  bt%1 qword[bitflags], %2
+    53 000000F1 [4F000000]3D        <2>
+    53 000000F6 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 000000FE E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    53                              <2>  PR1 fmt, msgI
+    53 00000103 48BF-               <3>  mov rdi, %1
+    53 00000105 [0000000000000000]  <3>
+    53 0000010D 48BE-               <3>  mov rsi, %2
+    53 0000010F [3200000000000000]  <3>
+    53 00000117 4831C0              <3>  xor rax, rax
+    53 0000011A E8(00000000)        <3>  call printf
+    53 0000011F 480FBA3425-         <2>  bt%1 qword[bitflags], %2
+    53 00000124 [4F000000]08        <2>
+    53 00000129 488B3C25[4F000000]  <2>  mov rdi, [bitflags]
+    53 00000131 E8(00000000)        <2>  call printb
+    53                              <2> 
+    53                              <2>  %assign I I+1
+    53                              <2>  %rotate 2
+    54                                  
+    55                                      ; test 61, will set CF
+    56                                      PR1 fmt, msg7
+    56 00000136 48BF-               <1>  mov rdi, %1
+    56 00000138 [0000000000000000]  <1>
+    56 00000140 48BE-               <1>  mov rsi, %2
+    56 00000142 [3C00000000000000]  <1>
+    56 0000014A 4831C0              <1>  xor rax, rax
+    56 0000014D E8(00000000)        <1>  call printf
+    57                                      
+    58 00000152 4831FF                      xor rdi, rdi
+    59 00000155 B83D000000                  mov rax, 61
+    60 0000015A 4831FF                      xor rdi, rdi
+    61 0000015D 480FA30425-                 bt [bitflags], rax ; test bit
+    61 00000162 [4F000000]         
+    62 00000166 400F92C7                    setc dil ; set dil(=low rdi) to 1 if CF is set
+    63 0000016A E8(00000000)                call printb
     64                                  
-    65                                  
+    65                                  MAIN_EPILO_EXIT0
+    65 0000016F 4889EC              <1>  mov rsp, rbp
+    65 00000172 5D                  <1>  pop rbp
+    65 00000173 B83C000000          <1>  mov rax, 60
+    65 00000178 4831FF              <1>  xor rdi, rdi
+    65 0000017B 0F05                <1>  syscall
+    66                                  ; main:
+    67                                  
+    68                                  
+    69                                  
+    70                                  

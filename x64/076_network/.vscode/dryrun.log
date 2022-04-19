@@ -1,0 +1,10 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/mnt/c/Apps/ASM/x64/076_network'
+# grep -v "^%line" | 
+nasm -e server_nasm.asm | grep -v "^$" | awk ' { if ($1 == "%line") print "                              ", $0 ; else print $0; }; '  > server_nasm.asme
+nasm -f elf64 -g -F dwarf server_nasm.asm -l server_nasm.lst
+objdump -M intel -d server_nasm.o > server_nasm.objdump
+make: Leaving directory '/mnt/c/Apps/ASM/x64/076_network'
+ 
+make: *** No rule to make target 'printb.c', needed by 'printb.o'.
+ 

@@ -1,0 +1,35 @@
+
+server_nasm.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <.text>:
+   0:	55                   	push   rbp
+   1:	48 89 e5             	mov    rbp,rsp
+   4:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+   b:	00 00 00 
+   e:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  15:	00 00 00 
+  18:	48 8b 14 25 00 00 00 	mov    rdx,QWORD PTR ds:0x0
+  1f:	00 
+  20:	48 31 c0             	xor    rax,rax
+  23:	e8 00 00 00 00       	call   28 <.text+0x28>
+  28:	48 8b 04 25 00 00 00 	mov    rax,QWORD PTR ds:0x0
+  2f:	00 
+  30:	48 d1 e0             	shl    rax,1
+  33:	48 89 04 25 00 00 00 	mov    QWORD PTR ds:0x0,rax
+  3a:	00 
+  3b:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  42:	00 00 00 
+  45:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  4c:	00 00 00 
+  4f:	48 8b 14 25 00 00 00 	mov    rdx,QWORD PTR ds:0x0
+  56:	00 
+  57:	48 31 c0             	xor    rax,rax
+  5a:	e8 00 00 00 00       	call   5f <.text+0x5f>
+  5f:	48 89 ec             	mov    rsp,rbp
+  62:	5d                   	pop    rbp
+  63:	b8 3c 00 00 00       	mov    eax,0x3c
+  68:	48 31 ff             	xor    rdi,rdi
+  6b:	0f 05                	syscall 

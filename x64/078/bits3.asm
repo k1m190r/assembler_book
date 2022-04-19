@@ -37,23 +37,30 @@ section .text
 main:
 PROLO
 
-    PR1 fmt, msg1
-
-    mov rdi, [bitflags]
-    call printb
-
-    %macro SHOPS 1-*
+    %macro BTS_BTR 1-*
     %assign I 1
     %rep %0/2
-        mov rax, [%2]
-        %1  rax, 2
-        mov [res], rax
-        PR3 fmt, [%2], msg%[I], [res]
+        PR1 fmt, msg%[I]
+        bt%[%1]  qword[bitflags], %2
+        mov rdi, [bitflags]
+        call printb
 
         %assign I I+1
         %rotate 2
     %endrep
     %endmacro 
+
+    BTS_BTR r, 0, s, 4, s, 7, s, 8, s, 61, r, 8
+
+    ; test 61, will set CF
+    PR1 fmt, msg7
+    
+    xor rdi, rdi
+    mov rax, 61
+    xor rdi, rdi
+    bt [bitflags], rax ; test bit
+    setc dil ; set dil(=low rdi) to 1 if CF is set
+    call printb
 
 MAIN_EPILO_EXIT0
 ; main:

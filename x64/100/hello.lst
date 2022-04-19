@@ -18,14 +18,15 @@
     17 0000000A 48BE-                   mov rsi, msg
     17 0000000C [0000000000000000] 
     18 00000014 BA0C000000              mov rdx, 12 ; len(msg)
-    19 00000019 0F05                    syscall
-    20                                  
-    21                                  ; exit 0
-    22 0000001B B83C000000              mov rax, 60 ; exit
-    23 00000020 BF00000000              mov rdi, 0 ; exit code
-    24 00000025 0F05                    syscall
-    25                                  
-    26 00000027 90                      nop
-    27                                  
-    28                                  ;main:
-    29                                  
+    19 00000019 0F05                    db 0x0F, 0x05
+    20                                  ;syscall
+    21                                  
+    22                                  ; exit 0
+    23 0000001B B83C000000              mov rax, 60 ; exit
+    24 00000020 BF00000000              mov rdi, 0 ; exit code
+    25 00000025 0F05                    syscall
+    26                                  
+    27 00000027 90                      nop
+    28                                  
+    29                                  ;main:
+    30                                  

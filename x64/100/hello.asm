@@ -16,7 +16,8 @@ mov rax, 1 ; write
 mov rdi, 1 ; stdout
 mov rsi, msg
 mov rdx, 12 ; len(msg)
-syscall
+db 0x0F, 0x05
+;syscall
 
 ; exit 0
 mov rax, 60 ; exit

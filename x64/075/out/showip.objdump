@@ -1,0 +1,117 @@
+
+out/showip.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	f3 0f 1e fa          	endbr64 
+   4:	55                   	push   rbp
+   5:	48 89 e5             	mov    rbp,rsp
+   8:	48 81 ec c0 00 00 00 	sub    rsp,0xc0
+   f:	89 bd 4c ff ff ff    	mov    DWORD PTR [rbp-0xb4],edi
+  15:	48 89 b5 40 ff ff ff 	mov    QWORD PTR [rbp-0xc0],rsi
+  1c:	64 48 8b 04 25 28 00 	mov    rax,QWORD PTR fs:0x28
+  23:	00 00 
+  25:	48 89 45 f8          	mov    QWORD PTR [rbp-0x8],rax
+  29:	31 c0                	xor    eax,eax
+  2b:	83 bd 4c ff ff ff 02 	cmp    DWORD PTR [rbp-0xb4],0x2
+  32:	74 2a                	je     5e <main+0x5e>
+  34:	48 8b 05 00 00 00 00 	mov    rax,QWORD PTR [rip+0x0]        # 3b <main+0x3b>
+  3b:	48 89 c1             	mov    rcx,rax
+  3e:	ba 17 00 00 00       	mov    edx,0x17
+  43:	be 01 00 00 00       	mov    esi,0x1
+  48:	48 8d 3d 00 00 00 00 	lea    rdi,[rip+0x0]        # 4f <main+0x4f>
+  4f:	e8 00 00 00 00       	call   54 <main+0x54>
+  54:	b8 01 00 00 00       	mov    eax,0x1
+  59:	e9 a0 01 00 00       	jmp    1fe <main+0x1fe>
+  5e:	48 8d 45 90          	lea    rax,[rbp-0x70]
+  62:	ba 30 00 00 00       	mov    edx,0x30
+  67:	be 00 00 00 00       	mov    esi,0x0
+  6c:	48 89 c7             	mov    rdi,rax
+  6f:	e8 00 00 00 00       	call   74 <main+0x74>
+  74:	c7 45 94 00 00 00 00 	mov    DWORD PTR [rbp-0x6c],0x0
+  7b:	c7 45 98 01 00 00 00 	mov    DWORD PTR [rbp-0x68],0x1
+  82:	48 8b 85 40 ff ff ff 	mov    rax,QWORD PTR [rbp-0xc0]
+  89:	48 83 c0 08          	add    rax,0x8
+  8d:	48 8b 00             	mov    rax,QWORD PTR [rax]
+  90:	48 8d 8d 60 ff ff ff 	lea    rcx,[rbp-0xa0]
+  97:	48 8d 55 90          	lea    rdx,[rbp-0x70]
+  9b:	be 00 00 00 00       	mov    esi,0x0
+  a0:	48 89 c7             	mov    rdi,rax
+  a3:	e8 00 00 00 00       	call   a8 <main+0xa8>
+  a8:	89 85 5c ff ff ff    	mov    DWORD PTR [rbp-0xa4],eax
+  ae:	83 bd 5c ff ff ff 00 	cmp    DWORD PTR [rbp-0xa4],0x0
+  b5:	74 35                	je     ec <main+0xec>
+  b7:	8b 85 5c ff ff ff    	mov    eax,DWORD PTR [rbp-0xa4]
+  bd:	89 c7                	mov    edi,eax
+  bf:	e8 00 00 00 00       	call   c4 <main+0xc4>
+  c4:	48 89 c2             	mov    rdx,rax
+  c7:	48 8b 05 00 00 00 00 	mov    rax,QWORD PTR [rip+0x0]        # ce <main+0xce>
+  ce:	48 8d 35 00 00 00 00 	lea    rsi,[rip+0x0]        # d5 <main+0xd5>
+  d5:	48 89 c7             	mov    rdi,rax
+  d8:	b8 00 00 00 00       	mov    eax,0x0
+  dd:	e8 00 00 00 00       	call   e2 <main+0xe2>
+  e2:	b8 02 00 00 00       	mov    eax,0x2
+  e7:	e9 12 01 00 00       	jmp    1fe <main+0x1fe>
+  ec:	48 8b 85 40 ff ff ff 	mov    rax,QWORD PTR [rbp-0xc0]
+  f3:	48 83 c0 08          	add    rax,0x8
+  f7:	48 8b 00             	mov    rax,QWORD PTR [rax]
+  fa:	48 89 c6             	mov    rsi,rax
+  fd:	48 8d 3d 00 00 00 00 	lea    rdi,[rip+0x0]        # 104 <main+0x104>
+ 104:	b8 00 00 00 00       	mov    eax,0x0
+ 109:	e8 00 00 00 00       	call   10e <main+0x10e>
+ 10e:	48 8b 85 60 ff ff ff 	mov    rax,QWORD PTR [rbp-0xa0]
+ 115:	48 89 85 68 ff ff ff 	mov    QWORD PTR [rbp-0x98],rax
+ 11c:	e9 bb 00 00 00       	jmp    1dc <main+0x1dc>
+ 121:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
+ 128:	8b 40 04             	mov    eax,DWORD PTR [rax+0x4]
+ 12b:	83 f8 02             	cmp    eax,0x2
+ 12e:	75 2e                	jne    15e <main+0x15e>
+ 130:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
+ 137:	48 8b 40 18          	mov    rax,QWORD PTR [rax+0x18]
+ 13b:	48 89 45 88          	mov    QWORD PTR [rbp-0x78],rax
+ 13f:	48 8b 45 88          	mov    rax,QWORD PTR [rbp-0x78]
+ 143:	48 83 c0 04          	add    rax,0x4
+ 147:	48 89 85 70 ff ff ff 	mov    QWORD PTR [rbp-0x90],rax
+ 14e:	48 8d 05 00 00 00 00 	lea    rax,[rip+0x0]        # 155 <main+0x155>
+ 155:	48 89 85 78 ff ff ff 	mov    QWORD PTR [rbp-0x88],rax
+ 15c:	eb 2c                	jmp    18a <main+0x18a>
+ 15e:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
+ 165:	48 8b 40 18          	mov    rax,QWORD PTR [rax+0x18]
+ 169:	48 89 45 80          	mov    QWORD PTR [rbp-0x80],rax
+ 16d:	48 8b 45 80          	mov    rax,QWORD PTR [rbp-0x80]
+ 171:	48 83 c0 08          	add    rax,0x8
+ 175:	48 89 85 70 ff ff ff 	mov    QWORD PTR [rbp-0x90],rax
+ 17c:	48 8d 05 00 00 00 00 	lea    rax,[rip+0x0]        # 183 <main+0x183>
+ 183:	48 89 85 78 ff ff ff 	mov    QWORD PTR [rbp-0x88],rax
+ 18a:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
+ 191:	8b 40 04             	mov    eax,DWORD PTR [rax+0x4]
+ 194:	48 8d 55 c0          	lea    rdx,[rbp-0x40]
+ 198:	48 8b b5 70 ff ff ff 	mov    rsi,QWORD PTR [rbp-0x90]
+ 19f:	b9 2e 00 00 00       	mov    ecx,0x2e
+ 1a4:	89 c7                	mov    edi,eax
+ 1a6:	e8 00 00 00 00       	call   1ab <main+0x1ab>
+ 1ab:	48 8d 55 c0          	lea    rdx,[rbp-0x40]
+ 1af:	48 8b 85 78 ff ff ff 	mov    rax,QWORD PTR [rbp-0x88]
+ 1b6:	48 89 c6             	mov    rsi,rax
+ 1b9:	48 8d 3d 00 00 00 00 	lea    rdi,[rip+0x0]        # 1c0 <main+0x1c0>
+ 1c0:	b8 00 00 00 00       	mov    eax,0x0
+ 1c5:	e8 00 00 00 00       	call   1ca <main+0x1ca>
+ 1ca:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
+ 1d1:	48 8b 40 28          	mov    rax,QWORD PTR [rax+0x28]
+ 1d5:	48 89 85 68 ff ff ff 	mov    QWORD PTR [rbp-0x98],rax
+ 1dc:	48 83 bd 68 ff ff ff 	cmp    QWORD PTR [rbp-0x98],0x0
+ 1e3:	00 
+ 1e4:	0f 85 37 ff ff ff    	jne    121 <main+0x121>
+ 1ea:	48 8b 85 60 ff ff ff 	mov    rax,QWORD PTR [rbp-0xa0]
+ 1f1:	48 89 c7             	mov    rdi,rax
+ 1f4:	e8 00 00 00 00       	call   1f9 <main+0x1f9>
+ 1f9:	b8 00 00 00 00       	mov    eax,0x0
+ 1fe:	48 8b 4d f8          	mov    rcx,QWORD PTR [rbp-0x8]
+ 202:	64 48 33 0c 25 28 00 	xor    rcx,QWORD PTR fs:0x28
+ 209:	00 00 
+ 20b:	74 05                	je     212 <main+0x212>
+ 20d:	e8 00 00 00 00       	call   212 <main+0x212>
+ 212:	c9                   	leave  
+ 213:	c3                   	ret    

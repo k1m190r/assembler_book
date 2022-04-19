@@ -1,0 +1,62 @@
+                               %line 1+1 server_nasm.asm
+                               %line 1+1 ../inc/common.inc
+                               %line 10+1 ../inc/common.inc
+                               %line 17+1 ../inc/common.inc
+                               %line 24+1 ../inc/common.inc
+nil equ 0
+nl equ 10
+                               %line 37+1 ../inc/common.inc
+                               %line 43+1 ../inc/common.inc
+                               %line 51+1 ../inc/common.inc
+[extern printf]
+                               %line 67+1 ../inc/common.inc
+                               %line 76+1 ../inc/common.inc
+                               %line 86+1 ../inc/common.inc
+                               %line 97+1 ../inc/common.inc
+                               %line 103+1 ../inc/common.inc
+                               %line 111+1 ../inc/common.inc
+                               %line 3+1 server_nasm.asm
+[global main]
+[extern printb]
+                               %line 32+1 server_nasm.asm
+[section .data]
+ num dq 15
+[section .bss]
+main:
+[section .text]
+ push rbp
+                               %line 46+0 server_nasm.asm
+ mov rbp, rsp
+                               %line 47+1 server_nasm.asm
+[section .data]
+                               %line 47+0 server_nasm.asm
+ ..@9.arg1 db "Num:", 0
+ ..@9.fmt db "%s %ld", nl,nil
+[section .text]
+ mov rdi, ..@9.fmt
+ mov rsi, ..@9.arg1
+ mov rdx, [num]
+ xor rax, rax
+ call printf
+                               %line 48+1 server_nasm.asm
+ mov rax, [num]
+ sal rax, 1
+ mov [num], rax
+[section .data]
+                               %line 51+0 server_nasm.asm
+ ..@12.arg1 db "Num*2:", 0
+ ..@12.fmt db "%s %ld", nl,nil
+[section .text]
+ mov rdi, ..@12.fmt
+ mov rsi, ..@12.arg1
+ mov rdx, [num]
+ xor rax, rax
+ call printf
+                               %line 52+1 server_nasm.asm
+ mov rsp, rbp
+                               %line 53+0 server_nasm.asm
+ pop rbp
+ mov rax, 60
+ xor rdi, rdi
+ syscall
+                               %line 54+1 server_nasm.asm

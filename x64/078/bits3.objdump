@@ -13,11 +13,81 @@ Disassembly of section .text:
   15:	00 00 00 
   18:	48 31 c0             	xor    rax,rax
   1b:	e8 00 00 00 00       	call   20 <main+0x20>
-  20:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
-  27:	00 
-  28:	e8 00 00 00 00       	call   2d <main+0x2d>
-  2d:	48 89 ec             	mov    rsp,rbp
-  30:	5d                   	pop    rbp
-  31:	b8 3c 00 00 00       	mov    eax,0x3c
-  36:	48 31 ff             	xor    rdi,rdi
-  39:	0f 05                	syscall 
+  20:	48 0f ba 34 25 00 00 	btr    QWORD PTR ds:0x0,0x0
+  27:	00 00 00 
+  2a:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  31:	00 
+  32:	e8 00 00 00 00       	call   37 <main+0x37>
+  37:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  3e:	00 00 00 
+  41:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  48:	00 00 00 
+  4b:	48 31 c0             	xor    rax,rax
+  4e:	e8 00 00 00 00       	call   53 <main+0x53>
+  53:	48 0f ba 2c 25 00 00 	bts    QWORD PTR ds:0x0,0x4
+  5a:	00 00 04 
+  5d:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  64:	00 
+  65:	e8 00 00 00 00       	call   6a <main+0x6a>
+  6a:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  71:	00 00 00 
+  74:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  7b:	00 00 00 
+  7e:	48 31 c0             	xor    rax,rax
+  81:	e8 00 00 00 00       	call   86 <main+0x86>
+  86:	48 0f ba 2c 25 00 00 	bts    QWORD PTR ds:0x0,0x7
+  8d:	00 00 07 
+  90:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  97:	00 
+  98:	e8 00 00 00 00       	call   9d <main+0x9d>
+  9d:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  a4:	00 00 00 
+  a7:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  ae:	00 00 00 
+  b1:	48 31 c0             	xor    rax,rax
+  b4:	e8 00 00 00 00       	call   b9 <main+0xb9>
+  b9:	48 0f ba 2c 25 00 00 	bts    QWORD PTR ds:0x0,0x8
+  c0:	00 00 08 
+  c3:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  ca:	00 
+  cb:	e8 00 00 00 00       	call   d0 <main+0xd0>
+  d0:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+  d7:	00 00 00 
+  da:	48 be 00 00 00 00 00 	movabs rsi,0x0
+  e1:	00 00 00 
+  e4:	48 31 c0             	xor    rax,rax
+  e7:	e8 00 00 00 00       	call   ec <main+0xec>
+  ec:	48 0f ba 2c 25 00 00 	bts    QWORD PTR ds:0x0,0x3d
+  f3:	00 00 3d 
+  f6:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+  fd:	00 
+  fe:	e8 00 00 00 00       	call   103 <main+0x103>
+ 103:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 10a:	00 00 00 
+ 10d:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 114:	00 00 00 
+ 117:	48 31 c0             	xor    rax,rax
+ 11a:	e8 00 00 00 00       	call   11f <main+0x11f>
+ 11f:	48 0f ba 34 25 00 00 	btr    QWORD PTR ds:0x0,0x8
+ 126:	00 00 08 
+ 129:	48 8b 3c 25 00 00 00 	mov    rdi,QWORD PTR ds:0x0
+ 130:	00 
+ 131:	e8 00 00 00 00       	call   136 <main+0x136>
+ 136:	48 bf 00 00 00 00 00 	movabs rdi,0x0
+ 13d:	00 00 00 
+ 140:	48 be 00 00 00 00 00 	movabs rsi,0x0
+ 147:	00 00 00 
+ 14a:	48 31 c0             	xor    rax,rax
+ 14d:	e8 00 00 00 00       	call   152 <main+0x152>
+ 152:	48 31 ff             	xor    rdi,rdi
+ 155:	b8 3d 00 00 00       	mov    eax,0x3d
+ 15a:	48 31 ff             	xor    rdi,rdi
+ 15d:	48 0f a3 04 25 00 00 	bt     QWORD PTR ds:0x0,rax
+ 164:	00 00 
+ 166:	40 0f 92 c7          	setb   dil
+ 16a:	e8 00 00 00 00       	call   16f <main+0x16f>
+ 16f:	48 89 ec             	mov    rsp,rbp
+ 172:	5d                   	pop    rbp
+ 173:	b8 3c 00 00 00       	mov    eax,0x3c
+ 178:	48 31 ff             	xor    rdi,rdi
+ 17b:	0f 05                	syscall 

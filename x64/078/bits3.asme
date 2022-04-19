@@ -39,19 +39,67 @@ main:
                                %line 38+0 bits3.asm
  mov rbp, rsp
                                %line 39+1 bits3.asm
+                               %line 52+1 bits3.asm
  mov rdi, fmt
-                               %line 40+0 bits3.asm
+                               %line 53+0 bits3.asm
  mov rsi, msg1
  xor rax, rax
  call printf
-                               %line 41+1 bits3.asm
+ btr qword[bitflags], 0
  mov rdi, [bitflags]
  call printb
+ mov rdi, fmt
+ mov rsi, msg2
+ xor rax, rax
+ call printf
+ bts qword[bitflags], 4
+ mov rdi, [bitflags]
+ call printb
+ mov rdi, fmt
+ mov rsi, msg3
+ xor rax, rax
+ call printf
+ bts qword[bitflags], 7
+ mov rdi, [bitflags]
+ call printb
+ mov rdi, fmt
+ mov rsi, msg4
+ xor rax, rax
+ call printf
+ bts qword[bitflags], 8
+ mov rdi, [bitflags]
+ call printb
+ mov rdi, fmt
+ mov rsi, msg5
+ xor rax, rax
+ call printf
+ bts qword[bitflags], 61
+ mov rdi, [bitflags]
+ call printb
+ mov rdi, fmt
+ mov rsi, msg6
+ xor rax, rax
+ call printf
+ btr qword[bitflags], 8
+ mov rdi, [bitflags]
+ call printb
+                               %line 54+1 bits3.asm
+ mov rdi, fmt
+                               %line 56+0 bits3.asm
+ mov rsi, msg7
+ xor rax, rax
+ call printf
                                %line 57+1 bits3.asm
+ xor rdi, rdi
+ mov rax, 61
+ xor rdi, rdi
+ bt [bitflags], rax
+ setc dil
+ call printb
  mov rsp, rbp
-                               %line 60+0 bits3.asm
+                               %line 65+0 bits3.asm
  pop rbp
  mov rax, 60
  xor rdi, rdi
  syscall
-                               %line 61+1 bits3.asm
+                               %line 66+1 bits3.asm
